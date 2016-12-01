@@ -1,0 +1,10 @@
+Railway/bin
+Railway/obj
+Railway/App.config
+
+RailwayCL/bin
+RailwayCL/obj
+
+packages/*
+backup/*
+*.suo
