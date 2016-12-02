@@ -31,6 +31,10 @@ namespace RailwayCL
         //    return stationDB;
         //}
 
+        /// <summary>
+        /// Получить список станций для выподающего списка
+        /// </summary>
+        /// <returns></returns>
         public List<Station> getStations()
         {
             List<Station> list = new List<Station>();

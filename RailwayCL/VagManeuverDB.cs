@@ -33,32 +33,40 @@ namespace RailwayCL
 
         private DataTable getVagonsTable(Way way, Side side)
         {
-            string str = "";
-            if (way.Stat.Outer_side == side) str = "desc";
-
-            string query = string.Format("select vo.*, o.abr as owner_, c.name as country, vc.name as cond,  " +
-            "g.name as gruz, g2.name as gruz_amkr, v.num, v.rod, v.st_otpr, s.name as shop, t.name as tupik, gd.name as gdstait, nc.name as nazn_country, vc2.name as cond2, vc2.id_cond_after, " +
-            "p.date_mail, p.n_mail, p.[text], p.nm_stan, p.nm_sobstv " +
-            "from VAGON_OPERATIONS vo " +
-            "inner join VAGONS v on vo.id_vagon=v.id_vag " +
-            "left join OWNERS o on v.id_owner=o.id_owner " +
-            "left join OWNERS_COUNTRIES c on o.id_country=c.id_own_country " +
-            "left join VAG_CONDITIONS vc on vo.id_cond=vc.id_cond " +
-            "left join GRUZS g on vo.id_gruz=g.id_gruz " +
-            "left join GRUZS g2 on vo.id_gruz_amkr=g2.id_gruz " +
-            "left join SHOPS s on vo.id_shop_gruz_for=s.id_shop " +
-            "left join TUPIKI t on vo.id_tupik = t.id_tupik " +
-            "left join GDSTAIT gd on vo.id_gdstait = gd.id_gdstait " +
-            "left join NAZN_COUNTRIES nc on vo.id_nazn_country = nc.id_country " +
-            "left join VAG_CONDITIONS2 vc2 on vo.id_cond2=vc2.id_cond " +
-            "left join v_p_vozvrat_ip p on p.id = (select top 1 id from v_P_VOZVRAT_IP where n_vag=v.num order by DATE_MAIL desc) " +
-            "where vo.id_way = @id_way and vo.is_present = 1 " +
-            "order by vo.num_vag_on_way " + str);
-            SqlParameter[] sqlParameters = new SqlParameter[1]; 
-            sqlParameters[0] = new SqlParameter("@id_way", way.ID);
-
-            return Conn.executeSelectQuery(query, sqlParameters).Tables[0];
+            string query = "[RailCars].[GetManeuverWagons]";
+            SqlParameter[] sqlParameters = new SqlParameter[2];
+            sqlParameters[0] = new SqlParameter("@idway", way.ID);
+            sqlParameters[1] = new SqlParameter("@side", way.Stat.Outer_side == side ? 1 : 0);
+            return Conn.executeProc(query, sqlParameters).Tables[0];
         }
+        //private DataTable getVagonsTable(Way way, Side side)
+        //{
+        //    string str = "";
+        //    if (way.Stat.Outer_side == side) str = "desc";
+
+        //    string query = string.Format("select vo.*, o.abr as owner_, c.name as country, vc.name as cond,  " +
+        //    "g.name as gruz, g2.name as gruz_amkr, v.num, v.rod, v.st_otpr, s.name as shop, t.name as tupik, gd.name as gdstait, nc.name as nazn_country, vc2.name as cond2, vc2.id_cond_after, " +
+        //    "p.date_mail, p.n_mail, p.[text], p.nm_stan, p.nm_sobstv " +
+        //    "from VAGON_OPERATIONS vo " +
+        //    "inner join VAGONS v on vo.id_vagon=v.id_vag " +
+        //    "left join OWNERS o on v.id_owner=o.id_owner " +
+        //    "left join OWNERS_COUNTRIES c on o.id_country=c.id_own_country " +
+        //    "left join VAG_CONDITIONS vc on vo.id_cond=vc.id_cond " +
+        //    "left join GRUZS g on vo.id_gruz=g.id_gruz " +
+        //    "left join GRUZS g2 on vo.id_gruz_amkr=g2.id_gruz " +
+        //    "left join SHOPS s on vo.id_shop_gruz_for=s.id_shop " +
+        //    "left join TUPIKI t on vo.id_tupik = t.id_tupik " +
+        //    "left join GDSTAIT gd on vo.id_gdstait = gd.id_gdstait " +
+        //    "left join NAZN_COUNTRIES nc on vo.id_nazn_country = nc.id_country " +
+        //    "left join VAG_CONDITIONS2 vc2 on vo.id_cond2=vc2.id_cond " +
+        //    "left join v_p_vozvrat_ip p on p.id = (select top 1 id from v_P_VOZVRAT_IP where n_vag=v.num order by DATE_MAIL desc) " +
+        //    "where vo.id_way = @id_way and vo.is_present = 1 " +
+        //    "order by vo.num_vag_on_way " + str);
+        //    SqlParameter[] sqlParameters = new SqlParameter[1]; 
+        //    sqlParameters[0] = new SqlParameter("@id_way", way.ID);
+
+        //    return Conn.executeSelectQuery(query, sqlParameters).Tables[0];
+        //}
 
         public List<VagManeuver> getVagons(Way way, Side side)
         {
@@ -123,7 +131,7 @@ namespace RailwayCL
         /// <returns></returns>
         public int execManeuver(VagManeuver vagManeuver, Way way)
         {
-            string query = string.Format("rw_ExecManuever_");
+            string query = string.Format("RailCars.ExecManuever_");
             SqlParameter[] sqlParameters = base.paramsForInsert((VagOperations)vagManeuver, way, 4);
 
             int i = sqlParameters.Length;

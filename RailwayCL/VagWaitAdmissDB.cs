@@ -96,99 +96,127 @@ namespace RailwayCL
         /// <returns></returns>
         private DataTable getTrainsTable(Station stat, SendingPoint sp)
         {
-            //string query = string.Format(
-            //    "select vo.id_stat, s.name as stat, vo.st_lock_id_stat, vo.st_lock_train, " +
-            //    "max(FORMAT(vo.dt_from_stat, 'yyyy-MM-dd HH:mm:ss')) AS dt_from_stat, count(vo.id_vagon) as vag_amount, " +
-            //    "vo.st_gruz_front, g.name as gruz_front_name, vo.st_shop, sh.name as shop_name " +
-            //    "from VAGON_OPERATIONS vo inner join STATIONS s on vo.id_stat=s.id_stat " +
-            //    "left join GRUZ_FRONTS g on vo.st_gruz_front=g.id_gruz_front " +
-            //    "left join SHOPS sh on vo.st_shop=sh.id_shop " +
-            //    "where vo.st_lock_id_stat=@id_stat and vo.is_present=0 and vo.is_hist=0 " +
-            //    "group by vo.id_stat, s.name, vo.st_lock_id_stat, vo.st_lock_train, " +
-            //    "    case when (vo.st_shop = -1 and vo.st_gruz_front = -1) or (vo.st_shop is null and vo.st_gruz_front is null) then FORMAT(vo.dt_from_stat, 'yyyy-MM-dd HH:mm:ss') end, " +
-            //    "vo.st_gruz_front, g.name, vo.st_shop, sh.name " +
-            //    "order by dt_from_stat");
-            string query = "";
-
+            int type = -1;
             if (sp.GetType().IsAssignableFrom(typeof(Station)))
             {
-                // Если станция
-                //TODO: Добавил сортировку vo.id_ora_23_temp, vo.id_oracle
-                query = string.Format(
-                    "select vo.id_stat, s.name as stat, vo.st_lock_id_stat, vo.st_lock_train, " +
-                    "max(FORMAT(vo.dt_from_stat, 'yyyy-MM-dd HH:mm:ss')) AS dt_from_stat, count(vo.id_vagon) as vag_amount, "+
-                    "vo.st_gruz_front, g.name as gruz_front_name, vo.st_shop, sh.name as shop_name, vo.st_lock_locom1, vo.st_lock_locom2 "+
-                    "from VAGON_OPERATIONS vo inner join STATIONS s on vo.id_stat=s.id_stat "+
-                    "left join GRUZ_FRONTS g on vo.st_gruz_front=g.id_gruz_front "+
-                    "left join SHOPS sh on vo.st_shop=sh.id_shop "+
-                    "where vo.st_lock_id_stat=@id_stat and vo.is_present=0 and vo.is_hist=0 "+
-                    "and ((vo.st_shop = -1 and vo.st_gruz_front = -1) or (vo.st_shop is null and vo.st_gruz_front is null)) "+
-                    "and vo.st_lock_train = case when @id_stat=17 then -1 else vo.st_lock_train end " + //TODO: временное условие "не показывать поезда отправленные на Прокатную-1 с пом. ПО, а только из КИС"
-                    "group by vo.id_stat, s.name, vo.st_lock_id_stat, vo.st_lock_train, FORMAT(vo.dt_from_stat, 'yyyy-MM-dd HH:mm:ss'), "+
-                    "vo.st_gruz_front, g.name, vo.st_shop, sh.name, vo.st_lock_locom1, vo.st_lock_locom2 " +
-                    "order by dt_from_stat");
-            //    query = string.Format(
-            //        "select vo.id_stat, s.name as stat, vo.st_lock_id_stat, vo.st_lock_train, "+
-            //        "max(FORMAT(vo.dt_from_stat, 'yyyy-MM-dd HH:mm:ss')) AS dt_from_stat, count(vo.id_vagon) as vag_amount, "+
-            //        "vo.st_gruz_front, g.name as gruz_front_name, vo.st_shop, sh.name as shop_name, vo.st_lock_locom1, vo.st_lock_locom2 "+
-            //        "from VAGON_OPERATIONS vo inner join STATIONS s on vo.id_stat=s.id_stat "+
-            //        "left join GRUZ_FRONTS g on vo.st_gruz_front=g.id_gruz_front "+
-            //        "left join SHOPS sh on vo.st_shop=sh.id_shop "+
-            //        "where vo.st_lock_id_stat=@id_stat and vo.is_present=0 and vo.is_hist=0 "+
-            //        "and ((vo.st_shop = -1 and vo.st_gruz_front = -1) or (vo.st_shop is null and vo.st_gruz_front is null)) "+
-            //        "and vo.st_lock_train = vo.st_lock_train "+ // временное условие "не показывать поезда отправленные на Прокатную-1 с пом. ПО, а только из КИС"
-            //        "group by vo.id_stat, s.name, vo.st_lock_id_stat, vo.st_lock_train, FORMAT(vo.dt_from_stat, 'yyyy-MM-dd HH:mm:ss'), "+
-            //        "vo.st_gruz_front, g.name, vo.st_shop, sh.name, vo.st_lock_locom1, vo.st_lock_locom2 " +
-            //        "order by dt_from_stat");
+                type = 0;   // станция
             }
             else if (sp.GetType().IsAssignableFrom(typeof(GruzFront)))
             {
-                // Вагоно-опрокид
-                query = string.Format(
-                    "select vo.id_stat, s.name as stat, vo.st_lock_id_stat, vo.st_lock_train, " +
-                    "max(FORMAT(vo.dt_from_way, 'yyyy-MM-dd HH:mm:ss')) AS dt_from_way, count(vo.id_vagon) as vag_amount, " +
-                    "vo.st_gruz_front, g.name as gruz_front_name, vo.st_shop, sh.name as shop_name, vo.st_lock_locom1, vo.st_lock_locom2 " +
-                    "from VAGON_OPERATIONS vo inner join STATIONS s on vo.id_stat=s.id_stat " +
-                    "left join GRUZ_FRONTS g on vo.st_gruz_front=g.id_gruz_front " +
-                    "left join SHOPS sh on vo.st_shop=sh.id_shop " +
-                    "where vo.st_lock_id_stat=@id_stat and vo.is_present=0 and vo.is_hist=0 " +
-                    "and vo.st_gruz_front <> -1 and vo.st_gruz_front is not null " +
-                    "group by vo.id_stat, s.name, vo.st_lock_id_stat, vo.st_lock_train, " +
-                    "vo.st_gruz_front, g.name, vo.st_shop, sh.name, vo.st_lock_locom1, vo.st_lock_locom2 " +
-                    "order by dt_from_way");
+                type = 1;   // Вагоноопрокид
             }
             else
             {
-               // Цех
-                //query = string.Format(
-                //    "select vo.id_stat, s.name as stat, vo.st_lock_id_stat, vo.st_lock_train, " +
-                //    "max(FORMAT(vo.dt_from_way, 'yyyy-MM-dd HH:mm:ss')) AS dt_from_way, count(vo.id_vagon) as vag_amount, " +
-                //    "vo.st_gruz_front, g.name as gruz_front_name, vo.st_shop, sh.name as shop_name, vo.st_lock_locom1, vo.st_lock_locom2 " +
-                //    "from VAGON_OPERATIONS vo inner join STATIONS s on vo.id_stat=s.id_stat " +
-                //    "left join GRUZ_FRONTS g on vo.st_gruz_front=g.id_gruz_front " +
-                //    "left join SHOPS sh on vo.st_shop=sh.id_shop " +
-                //    "where vo.st_lock_id_stat=@id_stat and vo.is_present=0 and vo.is_hist=0 " +
-                //    "and vo.st_shop <> -1 and vo.st_shop is not null " +
-                //    "group by vo.id_stat, s.name, vo.st_lock_id_stat, vo.st_lock_train, " +
-                //    "vo.st_gruz_front, g.name, vo.st_shop, sh.name, vo.st_lock_locom1, vo.st_lock_locom2 " +
-                //    "order by dt_from_way");
-                query = string.Format(
-                    "select vo.id_stat, s.name as stat, vo.st_lock_id_stat, vo.st_lock_train, " +
-                    "max(FORMAT(vo.dt_from_way, 'yyyy-MM-dd HH:mm:ss')) AS dt_from_way, count(vo.id_vagon) as vag_amount, " +
-                    "vo.st_gruz_front, g.name as gruz_front_name, vo.st_shop, sh.name as shop_name, vo.st_lock_locom1, vo.st_lock_locom2 " +
-                    "from VAGON_OPERATIONS vo inner join STATIONS s on vo.id_stat=s.id_stat " +
-                    "left join GRUZ_FRONTS g on vo.st_gruz_front=g.id_gruz_front " +
-                    "left join SHOPS sh on vo.st_shop=sh.id_shop " +
-                    "where vo.dt_from_way is not null and vo.st_lock_id_stat=@id_stat and vo.is_present=0 and vo.is_hist=0 " +
-                    "and vo.st_shop <> -1 and vo.st_shop is not null " +
-                    "group by vo.id_stat, s.name, vo.st_lock_id_stat, vo.st_lock_train, " +
-                    "vo.st_gruz_front, g.name, vo.st_shop, sh.name, vo.st_lock_locom1, vo.st_lock_locom2 " +
-                    "order by dt_from_way");
+                type = 2;   // Цех
             }
-            SqlParameter[] sqlParameters = new SqlParameter[1];
-            sqlParameters[0] = new SqlParameter("@id_stat", stat.ID); 
-            return Conn.executeSelectQuery(query, sqlParameters).Tables[0];
+            string query = "[RailCars].[GetAdmissTrains]";
+            SqlParameter[] sqlParameters = new SqlParameter[2];
+            sqlParameters[0] = new SqlParameter("@idstation", stat.ID);
+            sqlParameters[1] = new SqlParameter("@type", type);
+            return Conn.executeProc(query, sqlParameters).Tables[0];
         }
+        //private DataTable getTrainsTable(Station stat, SendingPoint sp)
+        //{
+        //    //string query = string.Format(
+        //    //    "select vo.id_stat, s.name as stat, vo.st_lock_id_stat, vo.st_lock_train, " +
+        //    //    "max(FORMAT(vo.dt_from_stat, 'yyyy-MM-dd HH:mm:ss')) AS dt_from_stat, count(vo.id_vagon) as vag_amount, " +
+        //    //    "vo.st_gruz_front, g.name as gruz_front_name, vo.st_shop, sh.name as shop_name " +
+        //    //    "from VAGON_OPERATIONS vo inner join STATIONS s on vo.id_stat=s.id_stat " +
+        //    //    "left join GRUZ_FRONTS g on vo.st_gruz_front=g.id_gruz_front " +
+        //    //    "left join SHOPS sh on vo.st_shop=sh.id_shop " +
+        //    //    "where vo.st_lock_id_stat=@id_stat and vo.is_present=0 and vo.is_hist=0 " +
+        //    //    "group by vo.id_stat, s.name, vo.st_lock_id_stat, vo.st_lock_train, " +
+        //    //    "    case when (vo.st_shop = -1 and vo.st_gruz_front = -1) or (vo.st_shop is null and vo.st_gruz_front is null) then FORMAT(vo.dt_from_stat, 'yyyy-MM-dd HH:mm:ss') end, " +
+        //    //    "vo.st_gruz_front, g.name, vo.st_shop, sh.name " +
+        //    //    "order by dt_from_stat");
+        //    string query = "";
+
+        //    if (sp.GetType().IsAssignableFrom(typeof(Station)))
+        //    {
+        //        int type = 0;
+        //        // Если станция
+        //        query = "[dbo].[rw_GetTrains]";
+        //        SqlParameter[] sqlParameters1 = new SqlParameter[2];
+        //        sqlParameters1[0] = new SqlParameter("@idstation", stat.ID);
+        //        sqlParameters1[1] = new SqlParameter("@type", type);
+        //        return Conn.executeProc(query, sqlParameters1).Tables[0];
+                
+        //        //query = string.Format(
+        //        //    "select vo.id_stat, s.name as stat, vo.st_lock_id_stat, vo.st_lock_train, " +
+        //        //    "max(FORMAT(vo.dt_from_stat, 'yyyy-MM-dd HH:mm:ss')) AS dt_from_stat, count(vo.id_vagon) as vag_amount, "+
+        //        //    "vo.st_gruz_front, g.name as gruz_front_name, vo.st_shop, sh.name as shop_name, vo.st_lock_locom1, vo.st_lock_locom2 "+
+        //        //    "from VAGON_OPERATIONS vo inner join STATIONS s on vo.id_stat=s.id_stat "+
+        //        //    "left join GRUZ_FRONTS g on vo.st_gruz_front=g.id_gruz_front "+
+        //        //    "left join SHOPS sh on vo.st_shop=sh.id_shop "+
+        //        //    "where vo.st_lock_id_stat=@id_stat and vo.is_present=0 and vo.is_hist=0 "+
+        //        //    "and ((vo.st_shop = -1 and vo.st_gruz_front = -1) or (vo.st_shop is null and vo.st_gruz_front is null)) "+
+        //        //    "and vo.st_lock_train = case when @id_stat=17 then -1 else vo.st_lock_train end " + //TODO: временное условие "не показывать поезда отправленные на Прокатную-1 с пом. ПО, а только из КИС"
+        //        //    "group by vo.id_stat, s.name, vo.st_lock_id_stat, vo.st_lock_train, FORMAT(vo.dt_from_stat, 'yyyy-MM-dd HH:mm:ss'), "+
+        //        //    "vo.st_gruz_front, g.name, vo.st_shop, sh.name, vo.st_lock_locom1, vo.st_lock_locom2 " +
+        //        //    "order by dt_from_stat");
+        //    //    query = string.Format(
+        //    //        "select vo.id_stat, s.name as stat, vo.st_lock_id_stat, vo.st_lock_train, "+
+        //    //        "max(FORMAT(vo.dt_from_stat, 'yyyy-MM-dd HH:mm:ss')) AS dt_from_stat, count(vo.id_vagon) as vag_amount, "+
+        //    //        "vo.st_gruz_front, g.name as gruz_front_name, vo.st_shop, sh.name as shop_name, vo.st_lock_locom1, vo.st_lock_locom2 "+
+        //    //        "from VAGON_OPERATIONS vo inner join STATIONS s on vo.id_stat=s.id_stat "+
+        //    //        "left join GRUZ_FRONTS g on vo.st_gruz_front=g.id_gruz_front "+
+        //    //        "left join SHOPS sh on vo.st_shop=sh.id_shop "+
+        //    //        "where vo.st_lock_id_stat=@id_stat and vo.is_present=0 and vo.is_hist=0 "+
+        //    //        "and ((vo.st_shop = -1 and vo.st_gruz_front = -1) or (vo.st_shop is null and vo.st_gruz_front is null)) "+
+        //    //        "and vo.st_lock_train = vo.st_lock_train "+ // временное условие "не показывать поезда отправленные на Прокатную-1 с пом. ПО, а только из КИС"
+        //    //        "group by vo.id_stat, s.name, vo.st_lock_id_stat, vo.st_lock_train, FORMAT(vo.dt_from_stat, 'yyyy-MM-dd HH:mm:ss'), "+
+        //    //        "vo.st_gruz_front, g.name, vo.st_shop, sh.name, vo.st_lock_locom1, vo.st_lock_locom2 " +
+        //    //        "order by dt_from_stat");
+        //    }
+        //    else if (sp.GetType().IsAssignableFrom(typeof(GruzFront)))
+        //    {
+        //        // Вагоно-опрокид
+        //        query = string.Format(
+        //            "select vo.id_stat, s.name as stat, vo.st_lock_id_stat, vo.st_lock_train, " +
+        //            "max(FORMAT(vo.dt_from_way, 'yyyy-MM-dd HH:mm:ss')) AS dt_from_way, count(vo.id_vagon) as vag_amount, " +
+        //            "vo.st_gruz_front, g.name as gruz_front_name, vo.st_shop, sh.name as shop_name, vo.st_lock_locom1, vo.st_lock_locom2 " +
+        //            "from VAGON_OPERATIONS vo inner join STATIONS s on vo.id_stat=s.id_stat " +
+        //            "left join GRUZ_FRONTS g on vo.st_gruz_front=g.id_gruz_front " +
+        //            "left join SHOPS sh on vo.st_shop=sh.id_shop " +
+        //            "where vo.st_lock_id_stat=@id_stat and vo.is_present=0 and vo.is_hist=0 " +
+        //            "and vo.st_gruz_front <> -1 and vo.st_gruz_front is not null " +
+        //            "group by vo.id_stat, s.name, vo.st_lock_id_stat, vo.st_lock_train, " +
+        //            "vo.st_gruz_front, g.name, vo.st_shop, sh.name, vo.st_lock_locom1, vo.st_lock_locom2 " +
+        //            "order by dt_from_way");
+        //    }
+        //    else
+        //    {
+        //       // Цех
+        //        //query = string.Format(
+        //        //    "select vo.id_stat, s.name as stat, vo.st_lock_id_stat, vo.st_lock_train, " +
+        //        //    "max(FORMAT(vo.dt_from_way, 'yyyy-MM-dd HH:mm:ss')) AS dt_from_way, count(vo.id_vagon) as vag_amount, " +
+        //        //    "vo.st_gruz_front, g.name as gruz_front_name, vo.st_shop, sh.name as shop_name, vo.st_lock_locom1, vo.st_lock_locom2 " +
+        //        //    "from VAGON_OPERATIONS vo inner join STATIONS s on vo.id_stat=s.id_stat " +
+        //        //    "left join GRUZ_FRONTS g on vo.st_gruz_front=g.id_gruz_front " +
+        //        //    "left join SHOPS sh on vo.st_shop=sh.id_shop " +
+        //        //    "where vo.st_lock_id_stat=@id_stat and vo.is_present=0 and vo.is_hist=0 " +
+        //        //    "and vo.st_shop <> -1 and vo.st_shop is not null " +
+        //        //    "group by vo.id_stat, s.name, vo.st_lock_id_stat, vo.st_lock_train, " +
+        //        //    "vo.st_gruz_front, g.name, vo.st_shop, sh.name, vo.st_lock_locom1, vo.st_lock_locom2 " +
+        //        //    "order by dt_from_way");
+        //        query = string.Format(
+        //            "select vo.id_stat, s.name as stat, vo.st_lock_id_stat, vo.st_lock_train, " +
+        //            "max(FORMAT(vo.dt_from_way, 'yyyy-MM-dd HH:mm:ss')) AS dt_from_way, count(vo.id_vagon) as vag_amount, " +
+        //            "vo.st_gruz_front, g.name as gruz_front_name, vo.st_shop, sh.name as shop_name, vo.st_lock_locom1, vo.st_lock_locom2 " +
+        //            "from VAGON_OPERATIONS vo inner join STATIONS s on vo.id_stat=s.id_stat " +
+        //            "left join GRUZ_FRONTS g on vo.st_gruz_front=g.id_gruz_front " +
+        //            "left join SHOPS sh on vo.st_shop=sh.id_shop " +
+        //            "where vo.dt_from_way is not null and vo.st_lock_id_stat=@id_stat and vo.is_present=0 and vo.is_hist=0 " +
+        //            "and vo.st_shop <> -1 and vo.st_shop is not null " +
+        //            "group by vo.id_stat, s.name, vo.st_lock_id_stat, vo.st_lock_train, " +
+        //            "vo.st_gruz_front, g.name, vo.st_shop, sh.name, vo.st_lock_locom1, vo.st_lock_locom2 " +
+        //            "order by dt_from_way");
+        //    }
+        //    SqlParameter[] sqlParameters = new SqlParameter[1];
+        //    sqlParameters[0] = new SqlParameter("@id_stat", stat.ID); 
+        //    return Conn.executeSelectQuery(query, sqlParameters).Tables[0];
+        //}
+
         /// <summary>
         /// Получить перечень вагонов
         /// </summary>
@@ -291,7 +319,7 @@ namespace RailwayCL
         /// <returns></returns>
         public int execAdmissOthStat(VagWaitAdmiss vagWaitAdmiss, Station stat, Way way, DateTime dt_arriv, int locom1, int locom2)
         {
-            string query = string.Format("rw_ExecOtherStation_");
+            string query = string.Format("RailCars.ExecOtherStation_");
             SqlParameter[] sqlParameters = base.paramsForInsert((VagOperations)vagWaitAdmiss, way, 6);
 
             int i = sqlParameters.Length;

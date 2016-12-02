@@ -34,19 +34,24 @@ namespace RailwayCL
         public List<Way> getWays(Station stat, bool rospusk)
         {
             List<Way> list = new List<Way>();
-            string str = "";
-            if (rospusk) str = "and w.for_rospusk<>0 ";
+            //string str = "";
+            //if (rospusk) str = "and w.for_rospusk<>0 ";
 
-            string query = string.Format("select w.id_way, w.num, w.name, w.vag_capacity, "+
-                "w.bind_id_cond, count(v.id_oper) as vag_amount, vc.name as cond_name, vc.id_cond_after "+
-                "from WAYS w left join VAGON_OPERATIONS v on w.id_way=v.id_way and v.is_present=1 " +
-                "left join VAG_CONDITIONS2 vc on w.bind_id_cond=vc.id_cond "+
-                "where w.id_stat=@id_stat "+str+
-                "group by w.id_way, w.num, w.name, w.vag_capacity, w.[order], w.bind_id_cond, vc.name, vc.id_cond_after "+
-                "order by w.[order]");
-            SqlParameter[] sqlParameters = new SqlParameter[1];
-            sqlParameters[0] = new SqlParameter("@id_stat", stat.ID);
-            DataTable table = Conn.executeSelectQuery(query, sqlParameters).Tables[0];
+            //string query = string.Format("select w.id_way, w.num, w.name, w.vag_capacity, "+
+            //    "w.bind_id_cond, count(v.id_oper) as vag_amount, vc.name as cond_name, vc.id_cond_after "+
+            //    "from WAYS w left join VAGON_OPERATIONS v on w.id_way=v.id_way and v.is_present=1 " +
+            //    "left join VAG_CONDITIONS2 vc on w.bind_id_cond=vc.id_cond "+
+            //    "where w.id_stat=@id_stat "+str+
+            //    "group by w.id_way, w.num, w.name, w.vag_capacity, w.[order], w.bind_id_cond, vc.name, vc.id_cond_after "+
+            //    "order by w.[order]");
+            //SqlParameter[] sqlParameters = new SqlParameter[1];
+            //sqlParameters[0] = new SqlParameter("@id_stat", stat.ID);
+            //DataTable table = Conn.executeSelectQuery(query, sqlParameters).Tables[0];
+            string query = "[RailCars].[GetWays]";
+            SqlParameter[] sqlParameters = new SqlParameter[2];
+            sqlParameters[0] = new SqlParameter("@idstation", stat.ID);
+            sqlParameters[1] = new SqlParameter("@rospusk", rospusk);
+            DataTable table = Conn.executeProc(query, sqlParameters).Tables[0];
 
             foreach (DataRow row in table.Rows)
             {

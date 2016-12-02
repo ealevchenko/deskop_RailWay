@@ -32,19 +32,26 @@ namespace RailwayCL
 
         private DataTable getTrainsTable(Station stat)
         {
-            string query = string.Format(
-                "select vo.st_lock_id_stat, s.name as stat, vo.st_lock_id_stat, vo.st_lock_train, "+
-                "max(FORMAT(vo.dt_from_stat, 'yyyy-MM-dd HH:mm:ss')) AS dt_from_stat, count(vo.id_vagon) as vag_amount "+
-                "from VAGON_OPERATIONS vo inner join STATIONS s on vo.st_lock_id_stat=s.id_stat "+
-                "where vo.id_stat=@id_stat and vo.is_present=0 and vo.is_hist=0 "+
-                "and ((vo.st_shop = -1 and vo.st_gruz_front = -1) or (vo.st_shop is null and vo.st_gruz_front is null)) "+
-                "and ((s.is_uz !=1) or (vo.dt_from_stat>GETDATE()-1)) "+
-                "group by vo.id_stat, s.name, vo.st_lock_id_stat, vo.st_lock_train, FORMAT(vo.dt_from_stat, 'yyyy-MM-dd HH:mm:ss') "+
-                "order by dt_from_stat");
+            string query = "[RailCars].[GetRemoveTrains]";
             SqlParameter[] sqlParameters = new SqlParameter[1];
-            sqlParameters[0] = new SqlParameter("@id_stat", stat.ID);
-            return Conn.executeSelectQuery(query, sqlParameters).Tables[0];
+            sqlParameters[0] = new SqlParameter("@idstation", stat.ID);
+            return Conn.executeProc(query, sqlParameters).Tables[0];
         }
+        //private DataTable getTrainsTable(Station stat)
+        //{
+        //    string query = string.Format(
+        //        "select vo.st_lock_id_stat, s.name as stat, vo.st_lock_id_stat, vo.st_lock_train, "+
+        //        "max(FORMAT(vo.dt_from_stat, 'yyyy-MM-dd HH:mm:ss')) AS dt_from_stat, count(vo.id_vagon) as vag_amount "+
+        //        "from VAGON_OPERATIONS vo inner join STATIONS s on vo.st_lock_id_stat=s.id_stat "+
+        //        "where vo.id_stat=@id_stat and vo.is_present=0 and vo.is_hist=0 "+
+        //        "and ((vo.st_shop = -1 and vo.st_gruz_front = -1) or (vo.st_shop is null and vo.st_gruz_front is null)) "+
+        //        "and ((s.is_uz !=1) or (vo.dt_from_stat>GETDATE()-1)) "+
+        //        "group by vo.id_stat, s.name, vo.st_lock_id_stat, vo.st_lock_train, FORMAT(vo.dt_from_stat, 'yyyy-MM-dd HH:mm:ss') "+
+        //        "order by dt_from_stat");
+        //    SqlParameter[] sqlParameters = new SqlParameter[1];
+        //    sqlParameters[0] = new SqlParameter("@id_stat", stat.ID);
+        //    return Conn.executeSelectQuery(query, sqlParameters).Tables[0];
+        //}
 
         public List<Train> getTrains(Station stat)
         {
@@ -96,33 +103,41 @@ namespace RailwayCL
 
         private DataTable getVagonsTable(Train train, Station stat)
         {
-            string query = string.Format("select vo.*, o.abr as owner_, " +
-            "c.name as country, vc.name as cond, vc2.name as cond2, vc2.id_cond_after, " +
-            "g.name as gruz, g2.name as gruz_amkr, v.num, v.rod, v.st_otpr, s.name as shop, t.name as tupik, gd.name as gdstait, nc.name as nazn_country, " +
-            "p.date_mail, p.n_mail, p.[text], p.nm_stan, p.nm_sobstv " +
-            "from VAGON_OPERATIONS vo " +
-            "inner join VAGONS v on vo.id_vagon=v.id_vag " +
-            "left join OWNERS o on v.id_owner=o.id_owner " +
-            "left join OWNERS_COUNTRIES c on o.id_country=c.id_own_country " +
-            "left join VAG_CONDITIONS vc on vo.id_cond=vc.id_cond " +
-            "left join GRUZS g on vo.id_gruz=g.id_gruz " +
-            "left join GRUZS g2 on vo.id_gruz_amkr=g2.id_gruz " +
-            "left join SHOPS s on vo.id_shop_gruz_for=s.id_shop " +
-            "left join TUPIKI t on vo.id_tupik = t.id_tupik " +
-            "left join GDSTAIT gd on vo.id_gdstait = gd.id_gdstait " +
-            "left join NAZN_COUNTRIES nc on vo.id_nazn_country = nc.id_country " +
-            "left join VAG_CONDITIONS2 vc2 on vo.id_cond2=vc2.id_cond " +
-            "left join v_p_vozvrat_ip p on p.id = (select top 1 id from v_P_VOZVRAT_IP where n_vag=v.num order by DATE_MAIL desc) "+
-            "where vo.id_stat=@id_stat and vo.is_present=0 " + 
-            "and CAST(FORMAT(vo.dt_from_stat,'yyyy-MM-dd HH:mm:ss') AS datetime) " +
-            "=CAST(FORMAT(@dt,'yyyy-MM-dd HH:mm:ss') as datetime) "+
-            "order by CAST(FORMAT(vo.dt_from_stat,'yyyy-MM-dd HH:mm:ss') AS datetime), vo.st_lock_order ");
+            string query = "[RailCars].[GetRemoveWagons]";
             SqlParameter[] sqlParameters = new SqlParameter[2];
-            sqlParameters[0] = new SqlParameter("@dt", train.DateFromStat);
-            sqlParameters[1] = new SqlParameter("@id_stat", stat.ID);
-
-            return Conn.executeSelectQuery(query, sqlParameters).Tables[0];
+            sqlParameters[0] = new SqlParameter("@idstation", stat.ID);
+            sqlParameters[1] = new SqlParameter("@dt", train.DateFromStat);
+            return Conn.executeProc(query, sqlParameters).Tables[0];
         }
+        //private DataTable getVagonsTable(Train train, Station stat)
+        //{
+        //    string query = string.Format("select vo.*, o.abr as owner_, " +
+        //    "c.name as country, vc.name as cond, vc2.name as cond2, vc2.id_cond_after, " +
+        //    "g.name as gruz, g2.name as gruz_amkr, v.num, v.rod, v.st_otpr, s.name as shop, t.name as tupik, gd.name as gdstait, nc.name as nazn_country, " +
+        //    "p.date_mail, p.n_mail, p.[text], p.nm_stan, p.nm_sobstv " +
+        //    "from VAGON_OPERATIONS vo " +
+        //    "inner join VAGONS v on vo.id_vagon=v.id_vag " +
+        //    "left join OWNERS o on v.id_owner=o.id_owner " +
+        //    "left join OWNERS_COUNTRIES c on o.id_country=c.id_own_country " +
+        //    "left join VAG_CONDITIONS vc on vo.id_cond=vc.id_cond " +
+        //    "left join GRUZS g on vo.id_gruz=g.id_gruz " +
+        //    "left join GRUZS g2 on vo.id_gruz_amkr=g2.id_gruz " +
+        //    "left join SHOPS s on vo.id_shop_gruz_for=s.id_shop " +
+        //    "left join TUPIKI t on vo.id_tupik = t.id_tupik " +
+        //    "left join GDSTAIT gd on vo.id_gdstait = gd.id_gdstait " +
+        //    "left join NAZN_COUNTRIES nc on vo.id_nazn_country = nc.id_country " +
+        //    "left join VAG_CONDITIONS2 vc2 on vo.id_cond2=vc2.id_cond " +
+        //    "left join v_p_vozvrat_ip p on p.id = (select top 1 id from v_P_VOZVRAT_IP where n_vag=v.num order by DATE_MAIL desc) "+
+        //    "where vo.id_stat=@id_stat and vo.is_present=0 " + 
+        //    "and CAST(FORMAT(vo.dt_from_stat,'yyyy-MM-dd HH:mm:ss') AS datetime) " +
+        //    "=CAST(FORMAT(@dt,'yyyy-MM-dd HH:mm:ss') as datetime) "+
+        //    "order by CAST(FORMAT(vo.dt_from_stat,'yyyy-MM-dd HH:mm:ss') AS datetime), vo.st_lock_order ");
+        //    SqlParameter[] sqlParameters = new SqlParameter[2];
+        //    sqlParameters[0] = new SqlParameter("@dt", train.DateFromStat);
+        //    sqlParameters[1] = new SqlParameter("@id_stat", stat.ID);
+
+        //    return Conn.executeSelectQuery(query, sqlParameters).Tables[0];
+        //}
 
         public List<VagWaitRemoveAdmiss> getVagons(Train train, Station stat)
         {
