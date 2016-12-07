@@ -85,9 +85,10 @@ namespace RailwayCL
                 vagOperations.Id_oper = Int32.Parse(row["id_oper"].ToString());
                 if (row["num_vag_on_way"] != DBNull.Value) vagOperations.Num_vag_on_way = Int32.Parse(row["num_vag_on_way"].ToString());//table.Rows.IndexOf(row) + 1;
                 if (row["id_vagon"] != DBNull.Value) vagOperations.Id_vag = Int32.Parse(row["id_vagon"].ToString());
-                if (row["num"] != DBNull.Value) vagOperations.Num_vag = Int32.Parse(row["num"].ToString());
+                if (row["num_vagon"] != DBNull.Value) vagOperations.Num_vag = Int32.Parse(row["num_vagon"].ToString());
                 if (row["rod"] != DBNull.Value) vagOperations.Rod = row["rod"].ToString().Trim();
                 if (row["dt_amkr"] != DBNull.Value) vagOperations.DT_amkr = DateTime.Parse(row["dt_amkr"].ToString());
+                if (row["dt_uz"] != DBNull.Value) vagOperations.DT_uz = DateTime.Parse(row["dt_uz"].ToString()); // 
                 if (row["dt_on_way"] != DBNull.Value) vagOperations.DT_on_way = DateTime.Parse(row["dt_on_way"].ToString());
                 if (row["dt_on_stat"] != DBNull.Value) vagOperations.Dt_on_stat = DateTime.Parse(row["dt_on_stat"].ToString());
                 if (row["dt_from_stat"] != DBNull.Value) vagOperations.Dt_from_stat = DateTime.Parse(row["dt_from_stat"].ToString());

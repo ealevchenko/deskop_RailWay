@@ -2719,5 +2719,6 @@ namespace RailwayUI
         {
             get { return chRospusk.Checked; }
         }
+
     }
 }

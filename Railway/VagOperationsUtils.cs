@@ -68,7 +68,14 @@ namespace RailwayUI
             col.DataPropertyName = "Gruz";
             dgv.Columns.Add(col);
 
-
+            col = new DataGridViewTextBoxColumn();
+            col.HeaderText = "Дата/время готовности отправки с УЗ";
+            col.Name = "Дата/время готовности отправки с УЗ";
+            col.DataPropertyName = "DT_uz";
+            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            //col.DefaultCellStyle.BackColor = System.Drawing.Color.LightGray;
+            col.Width = 130;
+            dgv.Columns.Add(col);
             // --- прибытие с УЗ -------
 
             col = new DataGridViewTextBoxColumn();

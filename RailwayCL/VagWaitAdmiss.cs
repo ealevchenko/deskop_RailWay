@@ -25,6 +25,7 @@ namespace RailwayCL
             this.Id_oper = vo.Id_oper;
             this.Num_vag_on_way = vo.Num_vag_on_way;
             this.DT_amkr = vo.DT_amkr;
+            this.DT_uz = vo.DT_uz; //Дата готовности отправки с УЗ
             this.Id_vag = vo.Id_vag;
             this.Num_vag = vo.Num_vag;
             this.Rod = vo.Rod;

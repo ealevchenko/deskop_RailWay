@@ -11,6 +11,8 @@ namespace RailwayCL
         private int id_oper = -1;       
         private int num_vag_on_way;
 
+        private DateTime dt_uz;  //Дата готовности отправки с УЗ
+
         private int id_vag = -1;
         private int num_vag = -1;
         private string rod = "";      
@@ -65,7 +67,10 @@ namespace RailwayCL
             get { return rod; }
             set { rod = value; }
         }
-
+       
+        //Дата готовности отправки с УЗ
+        public DateTime DT_uz { get { return dt_uz; } set { dt_uz = value; } } 
+       
         public DateTime DT_amkr { get { return dt_amkr; } set { dt_amkr = value; } }
 
         public DateTime DT_on_way
