@@ -245,7 +245,7 @@ namespace RailwayCL
             int i = 0;
             foreach (DataRow row in table.Rows)
             {
-                list[i].Num_vag_on_way = table.Rows.IndexOf(row) + 1;
+                list[i].num_vag_on_way = table.Rows.IndexOf(row) + 1;
 
                 i++;
             }
@@ -334,8 +334,8 @@ namespace RailwayCL
 
             int i = sqlParameters.Length;
 
-            if (vagWaitAdmiss.Cond.Id == -1) sqlParameters[i-6] = new SqlParameter("@id_cond2", DBNull.Value);
-            else sqlParameters[i-6] = new SqlParameter("@id_cond2", vagWaitAdmiss.Cond.Id);
+            if (vagWaitAdmiss.cond.Id == -1) sqlParameters[i-6] = new SqlParameter("@id_cond2", DBNull.Value);
+            else sqlParameters[i-6] = new SqlParameter("@id_cond2", vagWaitAdmiss.cond.Id);
             if (dt_arriv < DateTime.Parse("1900-01-01 00:00"))
             {
                 sqlParameters[i - 5] = new SqlParameter("@dt_on_stat", DBNull.Value);
@@ -366,10 +366,10 @@ namespace RailwayCL
         {
             string query = string.Format("SELECT a.*, b.id_gruz "+
               "FROM Loading_data_SAP a "+
-              "left join GRUZS b on a.RODU = b.name_full and b.id_ora is not null " +
+              "left join GRUZS b on a.rodU = b.name_full and b.id_ora is not null " +
               "where a.vagu = @vag and @ceh like a.cehu+'%' and a.dat_dsdu >= @dt_from_way");
             SqlParameter[] sqlParameters = new SqlParameter[3];
-            sqlParameters[0] = new SqlParameter("@vag", vagWaitAdmiss.Num_vag);
+            sqlParameters[0] = new SqlParameter("@vag", vagWaitAdmiss.num_vag);
             sqlParameters[1] = new SqlParameter("@ceh", shop.Name);
             if (dtFromStat < DateTime.Parse("1900-01-01 00:00"))
                 sqlParameters[2] = new SqlParameter("@dt_from_way", DBNull.Value);
@@ -377,12 +377,12 @@ namespace RailwayCL
             DataTable table = Conn.executeSelectQuery(query, sqlParameters).Tables[0];
             try
             {
-                vagWaitAdmiss.Id_gruz = Int32.Parse(table.Rows[0]["id_gruz"].ToString());
-                vagWaitAdmiss.Gruz = table.Rows[0]["rodu"].ToString();
-                vagWaitAdmiss.Gdstait = table.Rows[0]["stnu"].ToString();
-                vagWaitAdmiss.Weight_gruz = Double.Parse(table.Rows[0]["tonu5"].ToString());
-                vagWaitAdmiss.GrvuSAP = table.Rows[0]["grvu"].ToString();
-                vagWaitAdmiss.NgruSAP = table.Rows[0]["ngru"].ToString();
+                vagWaitAdmiss.id_gruz = Int32.Parse(table.Rows[0]["id_gruz"].ToString());
+                vagWaitAdmiss.gruz = table.Rows[0]["rodu"].ToString();
+                vagWaitAdmiss.gdstait = table.Rows[0]["stnu"].ToString();
+                vagWaitAdmiss.weight_gruz = Double.Parse(table.Rows[0]["tonu5"].ToString());
+                vagWaitAdmiss.grvuSAP = table.Rows[0]["grvu"].ToString();
+                vagWaitAdmiss.ngruSAP = table.Rows[0]["ngru"].ToString();
             }
             catch (Exception)
             { }
@@ -396,11 +396,11 @@ namespace RailwayCL
                 " end "+
                 "else select @id_str");
             SqlParameter[] sqlParameters2 = new SqlParameter[1];
-            sqlParameters2[0] = new SqlParameter("@name", vagWaitAdmiss.Gdstait);
+            sqlParameters2[0] = new SqlParameter("@name", vagWaitAdmiss.gdstait);
             try
             {
                 table = Conn.executeSelectQuery(query, sqlParameters2).Tables[0];
-                vagWaitAdmiss.Id_gdstait = Int32.Parse(table.Rows[0][0].ToString());
+                vagWaitAdmiss.id_gdstait = Int32.Parse(table.Rows[0][0].ToString());
             }
             catch (Exception)
             { }
@@ -424,8 +424,8 @@ namespace RailwayCL
                 foreach (VagWaitAdmiss vag in vagons)
                 {
                     if (vagons.IndexOf(vag) == vagons.Count - 1)
-                        query += vag.Id_oper.ToString() + ")";
-                    else query += vag.Id_oper.ToString() + ",";
+                        query += vag.id_oper.ToString() + ")";
+                    else query += vag.id_oper.ToString() + ",";
                 }
             }
             SqlParameter[] sqlParameters = new SqlParameter[2];

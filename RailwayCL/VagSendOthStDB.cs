@@ -104,7 +104,7 @@ namespace RailwayCL
             else sqlParameters[0] = new SqlParameter("@id_stat", vagSendOthSt.St_lock_id_stat);
             sqlParameters[1] = new SqlParameter("@order", vagSendOthSt.St_lock_order);
             sqlParameters[2] = new SqlParameter("@lock_train", vagSendOthSt.St_lock_train);
-            sqlParameters[3] = new SqlParameter("@id_oper", vagSendOthSt.Id_oper);
+            sqlParameters[3] = new SqlParameter("@id_oper", vagSendOthSt.id_oper);
             sqlParameters[4] = new SqlParameter("@lock_side", (int)vagSendOthSt.St_lock_side);
             sqlParameters[5] = new SqlParameter("@gruz_front", vagSendOthSt.St_gruz_front);
             sqlParameters[6] = new SqlParameter("@st_shop", vagSendOthSt.St_shop);

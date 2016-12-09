@@ -168,12 +168,12 @@ namespace RailwayCL
                 VagManeuver vagon = view.firstSelVagOnMan;
                 for (int i = 0; i <= srCount - 1; i++)
                 {
-                    if (vagManeuverDB.cancelVagOnMan(vagon.Id_oper))
+                    if (vagManeuverDB.cancelVagOnMan(vagon.id_oper))
                     {
                         // убрать выделение цветом
-                        view.setVagForManColor(vagon.Num_vag_on_way - 1, Color.Empty);
+                        view.setVagForManColor(vagon.num_vag_on_way - 1, Color.Empty);
                         // убрать дату снятия с пути
-                        view.listVagForMan[vagon.Num_vag_on_way - 1].DT_from_way = null;
+                        view.listVagForMan[vagon.num_vag_on_way - 1].dt_from_way = null;
                         view.removeFromVagOnMan(vagon);
                     }
                 }
@@ -224,8 +224,8 @@ namespace RailwayCL
             {
                 List<VagManeuver> listOnMan = view.listVagOnMan;
                 if (main.numSide == view.selectedSide)
-                    view.bindVagOnManToSource(listOnMan.OrderBy(x => x.Num_vag_on_way).ToList());
-                else view.bindVagOnManToSource(listOnMan.OrderByDescending(x => x.Num_vag_on_way).ToList());
+                    view.bindVagOnManToSource(listOnMan.OrderBy(x => x.num_vag_on_way).ToList());
+                else view.bindVagOnManToSource(listOnMan.OrderByDescending(x => x.num_vag_on_way).ToList());
             }
             catch (Exception ex)
             {
@@ -291,23 +291,23 @@ namespace RailwayCL
                     ". Горловина маневра: " + view.selectedSide.ToString() + ". Локомотив: " + locomNum);
                 foreach (VagManeuver item in view.listVagForMan)
                 {
-                    log.Info("Вагон " + item.Num_vag + " до маневра имеет № на пути: " + item.Num_vag_on_way);
+                    log.Info("Вагон " + item.num_vag + " до маневра имеет № на пути: " + item.num_vag_on_way);
                 }
                 //BeginTransaction
                 foreach (VagManeuver item in view.listVagOnMan)
                 {
-                    log.Info("Вагон на маневре №" + item.Num_vag + " до маневра имеет № на пути: " + item.Num_vag_on_way);
+                    log.Info("Вагон на маневре №" + item.num_vag + " до маневра имеет № на пути: " + item.num_vag_on_way);
                     mainPresenter.changeConditionWayOn(item, view.selectedWayTo);
                     mainPresenter.changeConditionWayAfter(item, view.selectedWayFrom);
 
                     if (main.numSide == view.selectedSide)
-                        item.Num_vag_on_way = view.listVagOnMan.IndexOf(item) + 1;
-                    else item.Num_vag_on_way = view.selectedWayTo.Vag_amount + view.listVagOnMan.Count - view.listVagOnMan.IndexOf(item);
+                        item.num_vag_on_way = view.listVagOnMan.IndexOf(item) + 1;
+                    else item.num_vag_on_way = view.selectedWayTo.Vag_amount + view.listVagOnMan.Count - view.listVagOnMan.IndexOf(item);
                     int ins_result = vagManeuverDB.execManeuver(item, view.selectedWayTo);
                     if (ins_result != -1)
                     {
-                        item.Id_oper = ins_result;
-                        log.Info("По вагону " + item.Num_vag + " маневр выполнен.");
+                        item.id_oper = ins_result;
+                        log.Info("По вагону " + item.num_vag + " маневр выполнен.");
                     }
                 }
                 //Log(DateTime.Now.ToString() + " Maneuver added to DB" + "\r\n");
@@ -315,8 +315,8 @@ namespace RailwayCL
                 if (main.numSide == view.selectedSide)
                 {
                     // изменить нумерацию вагонов на пути назначения
-                    vagManeuverDB.changeVagNumsWayOn(view.listVagOnMan.Count, view.listVagOnMan[0].Id_oper, view.selectedWayTo);
-                    log.Info("Изменение нумерации вагонов на пути назначения. First vagon id_oper=" + view.listVagOnMan[0].Id_oper);
+                    vagManeuverDB.changeVagNumsWayOn(view.listVagOnMan.Count, view.listVagOnMan[0].id_oper, view.selectedWayTo);
+                    log.Info("Изменение нумерации вагонов на пути назначения. First vagon id_oper=" + view.listVagOnMan[0].id_oper);
                 }
 
                 ManChangeVagNumsWayFrom(); // изменить нумерацию вагонов на пути изъятия
@@ -460,8 +460,8 @@ namespace RailwayCL
                         VagManeuver vagon = view.listVagForMan[i];
                         view.removeFromVagOnMan(vagon);
                         view.setVagForManColor(i, Color.Empty);
-                        vagon.DT_from_way = null;
-                        vagManeuverDB.cancelVagOnMan(vagon.Id_oper);
+                        vagon.dt_from_way = null;
+                        vagManeuverDB.cancelVagOnMan(vagon.id_oper);
                     }
                 }
             //}
@@ -497,7 +497,7 @@ namespace RailwayCL
             }
 
             vagManeuver.Lock_order = order;
-            vagManeuver.DT_from_way = DateTime.Now;
+            vagManeuver.dt_from_way = DateTime.Now;
             //try
             //{
                 return vagManeuverDB.addOnManeuver(vagManeuver);
@@ -514,8 +514,8 @@ namespace RailwayCL
             List<VagManeuver> remainedVagons = view.getRemainedVagForMan();
             foreach (VagManeuver item in remainedVagons)
             {
-                vagManeuverDB.changeVagNumsWayFrom(remainedVagons.IndexOf(item) + 1, item.Id_oper);
-                log.Info("Вагон " + item.Num_vag + ", remainedVagons.IndexOf(item)=" + remainedVagons.IndexOf(item) + ", item.Id_oper=" + item.Id_oper);
+                vagManeuverDB.changeVagNumsWayFrom(remainedVagons.IndexOf(item) + 1, item.id_oper);
+                log.Info("Вагон " + item.num_vag + ", remainedVagons.IndexOf(item)=" + remainedVagons.IndexOf(item) + ", item.id_oper=" + item.id_oper);
             }
         }
 
@@ -542,7 +542,7 @@ namespace RailwayCL
             string condName = "";
             try
             {
-                condName = view.listVagForMan[0].Cond.Name;
+                condName = view.listVagForMan[0].cond.Name;
             }
             catch (ArgumentOutOfRangeException) { }
             return condName;

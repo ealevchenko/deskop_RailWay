@@ -76,8 +76,8 @@ namespace RailwayCL
             int i = 0;
             foreach (DataRow row in table.Rows)
             {
-                if (row["dt_on_stat"] != DBNull.Value) list[i].DT_on_stat = DateTime.Parse(row["dt_on_stat"].ToString());
-                if (row["dt_from_way"] != DBNull.Value) list[i].DT_from_way = DateTime.Parse(row["dt_from_way"].ToString());
+                if (row["dt_on_stat"] != DBNull.Value) list[i].dt_on_stat = DateTime.Parse(row["dt_on_stat"].ToString());
+                if (row["dt_from_way"] != DBNull.Value) list[i].dt_from_way = DateTime.Parse(row["dt_from_way"].ToString());
                 if (row["lock_id_way"] != DBNull.Value) list[i].Lock_id_way = Int32.Parse(row["lock_id_way"].ToString());
                 if (row["lock_order"] != DBNull.Value) list[i].Lock_order = Int32.Parse(row["lock_order"].ToString());
                 if (row["lock_side"] != DBNull.Value) list[i].Lock_side = (Side)Int32.Parse(row["lock_side"].ToString());
@@ -99,10 +99,10 @@ namespace RailwayCL
             sqlParameters[1] = new SqlParameter("@order", vagOnStat.Lock_order);
             sqlParameters[2] = new SqlParameter("@lock_side", vagOnStat.Lock_side);
             sqlParameters[3] = new SqlParameter("@lock_id_locom", vagOnStat.Lock_id_locom);
-            if (vagOnStat.DT_from_way < DateTime.Parse("1900-01-01 00:00"))
+            if (vagOnStat.dt_from_way < DateTime.Parse("1900-01-01 00:00"))
                 sqlParameters[4] = new SqlParameter("@dt_from_way", DBNull.Value);
-            else sqlParameters[4] = new SqlParameter("@dt_from_way", vagOnStat.DT_from_way);
-            sqlParameters[5] = new SqlParameter("@id_oper", vagOnStat.Id_oper);
+            else sqlParameters[4] = new SqlParameter("@dt_from_way", vagOnStat.dt_from_way);
+            sqlParameters[5] = new SqlParameter("@id_oper", vagOnStat.id_oper);
             return Conn.executeNonQueryCommand(query, sqlParameters);
         }
 
@@ -138,16 +138,16 @@ namespace RailwayCL
 
             //if (way.Bind_cond.Id == -1) 
             //{
-            //    if (vagManeuver.Cond.Id == -1)
+            //    if (vagManeuver.cond.Id == -1)
             //        sqlParameters[i - 2] = new SqlParameter("@id_cond2", DBNull.Value);
-            //    else sqlParameters[i - 2] = new SqlParameter("@id_cond2", vagManeuver.Cond.Id);
+            //    else sqlParameters[i - 2] = new SqlParameter("@id_cond2", vagManeuver.cond.Id);
             //}
             //else sqlParameters[i - 2] = new SqlParameter("@id_cond2", way.Bind_cond.Id);
-            if (vagManeuver.Dt_on_stat < DateTime.Parse("1900-01-01 00:00"))
+            if (vagManeuver.dt_on_stat < DateTime.Parse("1900-01-01 00:00"))
                 sqlParameters[i - 4] = new SqlParameter("@dt_on_stat", DBNull.Value);
-            else sqlParameters[i - 4] = new SqlParameter("@dt_on_stat", vagManeuver.DT_on_stat);
-            if (vagManeuver.Cond.Id == -1) sqlParameters[i - 3] = new SqlParameter("@id_cond2", DBNull.Value);
-            else sqlParameters[i - 3] = new SqlParameter("@id_cond2", vagManeuver.Cond.Id);
+            else sqlParameters[i - 4] = new SqlParameter("@dt_on_stat", vagManeuver.dt_on_stat);
+            if (vagManeuver.cond.Id == -1) sqlParameters[i - 3] = new SqlParameter("@id_cond2", DBNull.Value);
+            else sqlParameters[i - 3] = new SqlParameter("@id_cond2", vagManeuver.cond.Id);
             if (vagManeuver.Lock_id_locom == -1) sqlParameters[i-2] = new SqlParameter("@id_locom", DBNull.Value);
             else sqlParameters[i-2] = new SqlParameter("@id_locom", vagManeuver.Lock_id_locom);
             sqlParameters[i - 1] = new SqlParameter("@new_identity", SqlDbType.Int);

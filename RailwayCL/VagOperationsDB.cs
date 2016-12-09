@@ -20,37 +20,37 @@ namespace RailwayCL
         protected SqlParameter[] paramsForInsert(VagOperations vo, Way way, int addParamsCount)
         {
             SqlParameter[] sqlParameters = new SqlParameter[17+addParamsCount];
-            sqlParameters[0] = new SqlParameter("@id_vagon", vo.Id_vag);
+            sqlParameters[0] = new SqlParameter("@id_vagon", vo.id_vag);
             sqlParameters[1] = new SqlParameter("@id_stat", way.Stat.ID);
             sqlParameters[2] = new SqlParameter("@id_way", way.ID);
-            sqlParameters[3] = new SqlParameter("@num_vag_on_way", vo.Num_vag_on_way); // Номер вагона на пути
-            if (vo.DT_amkr < DateTime.Parse("1900-01-01 00:00"))
+            sqlParameters[3] = new SqlParameter("@num_vag_on_way", vo.num_vag_on_way); // Номер вагона на пути
+            if (vo.dt_amkr < DateTime.Parse("1900-01-01 00:00"))
                 sqlParameters[4] = new SqlParameter("@dt_amkr", DBNull.Value);
-            else sqlParameters[4] = new SqlParameter("@dt_amkr", vo.DT_amkr);
-            sqlParameters[5] = new SqlParameter("@id_oper", vo.Id_oper);
-            if (vo.Id_godn != -1)
-                sqlParameters[6] = new SqlParameter("@id_cond", vo.Id_godn); // годность по прибытию
+            else sqlParameters[4] = new SqlParameter("@dt_amkr", vo.dt_amkr);
+            sqlParameters[5] = new SqlParameter("@id_oper", vo.id_oper);
+            if (vo.id_godn != -1)
+                sqlParameters[6] = new SqlParameter("@id_cond", vo.id_godn); // годность по прибытию
             else sqlParameters[6] = new SqlParameter("@id_cond", DBNull.Value);
-            if (vo.Id_gruz != -1)
-                sqlParameters[7] = new SqlParameter("@id_gruz", vo.Id_gruz); // груз
+            if (vo.id_gruz != -1)
+                sqlParameters[7] = new SqlParameter("@id_gruz", vo.id_gruz); // груз
             else sqlParameters[7] = new SqlParameter("@id_gruz", DBNull.Value);
-            sqlParameters[8] = new SqlParameter("@weight_gruz", vo.Weight_gruz); // вес
-            if (vo.Id_ceh_gruz != -1)
-                sqlParameters[9] = new SqlParameter("@id_shop_gruz_for", vo.Id_ceh_gruz); // 
+            sqlParameters[8] = new SqlParameter("@weight_gruz", vo.weight_gruz); // вес
+            if (vo.id_ceh_gruz != -1)
+                sqlParameters[9] = new SqlParameter("@id_shop_gruz_for", vo.id_ceh_gruz); // 
             else sqlParameters[9] = new SqlParameter("@id_shop_gruz_for", DBNull.Value);
-            if (vo.Id_tupik != -1)
-                sqlParameters[10] = new SqlParameter("@id_tupik", vo.Id_tupik); //тупик
+            if (vo.id_tupik != -1)
+                sqlParameters[10] = new SqlParameter("@id_tupik", vo.id_tupik); //тупик
             else sqlParameters[10] = new SqlParameter("@id_tupik", DBNull.Value);
-            if (vo.Id_nazn_country != -1)
-                sqlParameters[11] = new SqlParameter("@id_nazn_country", vo.Id_nazn_country); // страна назначения
+            if (vo.id_nazn_country != -1)
+                sqlParameters[11] = new SqlParameter("@id_nazn_country", vo.id_nazn_country); // страна назначения
             else sqlParameters[11] = new SqlParameter("@id_nazn_country", DBNull.Value);
-            if (vo.Id_gdstait != -1)
-                sqlParameters[12] = new SqlParameter("@id_gdstait", vo.Id_gdstait); //станция грузов доставки
+            if (vo.id_gdstait != -1)
+                sqlParameters[12] = new SqlParameter("@id_gdstait", vo.id_gdstait); //станция грузов доставки
             else sqlParameters[12] = new SqlParameter("@id_gdstait", DBNull.Value);
-            sqlParameters[13] = new SqlParameter("@note", vo.Note); // примечание груз
-            sqlParameters[14] = new SqlParameter("@grvuSAP", vo.GrvuSAP);   //
-            sqlParameters[15] = new SqlParameter("@ngruSAP", vo.NgruSAP);   //
-            sqlParameters[16] = new SqlParameter("@num_vagon", vo.Num_vag);   //
+            sqlParameters[13] = new SqlParameter("@note", vo.note); // примечание груз
+            sqlParameters[14] = new SqlParameter("@grvuSAP", vo.grvuSAP);   //
+            sqlParameters[15] = new SqlParameter("@ngruSAP", vo.ngruSAP);   //
+            sqlParameters[16] = new SqlParameter("@num_vagon", vo.num_vag);   //
             return sqlParameters;
         }
 
@@ -75,71 +75,181 @@ namespace RailwayCL
             return Conn.executeNonQueryCommand(query, sqlParameters);
         }
 
-        protected List<VagOperations> getVagons(DataTable table)
-        {
+        protected List<VagOperations> getVagons(DataTable table) 
+        { 
             List<VagOperations> list = new List<VagOperations>();
-
             foreach (DataRow row in table.Rows)
             {
-                VagOperations vagOperations = new VagOperations();
-                vagOperations.Id_oper = Int32.Parse(row["id_oper"].ToString());
-                if (row["num_vag_on_way"] != DBNull.Value) vagOperations.Num_vag_on_way = Int32.Parse(row["num_vag_on_way"].ToString());//table.Rows.IndexOf(row) + 1;
-                if (row["id_vagon"] != DBNull.Value) vagOperations.Id_vag = Int32.Parse(row["id_vagon"].ToString());
-                if (row["num_vagon"] != DBNull.Value) vagOperations.Num_vag = Int32.Parse(row["num_vagon"].ToString());
-                if (row["rod"] != DBNull.Value) vagOperations.Rod = row["rod"].ToString().Trim();
-                if (row["dt_amkr"] != DBNull.Value) vagOperations.DT_amkr = DateTime.Parse(row["dt_amkr"].ToString());
-                if (row["dt_uz"] != DBNull.Value) vagOperations.DT_uz = DateTime.Parse(row["dt_uz"].ToString()); // 
-                if (row["dt_on_way"] != DBNull.Value) vagOperations.DT_on_way = DateTime.Parse(row["dt_on_way"].ToString());
-                if (row["dt_on_stat"] != DBNull.Value) vagOperations.Dt_on_stat = DateTime.Parse(row["dt_on_stat"].ToString());
-                if (row["dt_from_stat"] != DBNull.Value) vagOperations.Dt_from_stat = DateTime.Parse(row["dt_from_stat"].ToString());
-                else vagOperations.Dt_from_stat = null;
-                if (row["owner_"] != DBNull.Value) vagOperations.Owner = row["owner_"].ToString().Trim();
-                if (row["country"] != DBNull.Value) vagOperations.Own_country = row["country"].ToString().Trim();
-                if (row["id_cond"] != DBNull.Value) vagOperations.Id_godn = Int32.Parse(row["id_cond"].ToString());
-                if (row["cond"] != DBNull.Value) vagOperations.Godn = row["cond"].ToString().Trim();
-                if (row["id_cond2"] != DBNull.Value) vagOperations.Cond.Id = Int32.Parse(row["id_cond2"].ToString());
-                if (row["cond2"] != DBNull.Value) vagOperations.Cond.Name = row["cond2"].ToString().Trim();
-                if (row["id_cond_after"] != DBNull.Value) vagOperations.Cond.Id_cond_after = Int32.Parse(row["id_cond_after"].ToString());
-                if (row["id_gruz"] != DBNull.Value) vagOperations.Id_gruz = Int32.Parse(row["id_gruz"].ToString());
-                if (row["gruz"] != DBNull.Value) vagOperations.Gruz = row["gruz"].ToString().Trim();
-                if (row["id_gruz_amkr"] != DBNull.Value) vagOperations.Id_gruz_amkr = Int32.Parse(row["id_gruz_amkr"].ToString());
-                if (row["gruz_amkr"] != DBNull.Value) vagOperations.Gruz_amkr = row["gruz_amkr"].ToString().Trim();
-                if (row["weight_gruz"] != DBNull.Value) vagOperations.Weight_gruz = Double.Parse(row["weight_gruz"].ToString());
-                if (row["id_shop_gruz_for"] != DBNull.Value) vagOperations.Id_ceh_gruz = Int32.Parse(row["id_shop_gruz_for"].ToString());
-                if (row["shop"] != DBNull.Value) vagOperations.CehGruz = row["shop"].ToString().Trim();
-                if (row["id_tupik"] != DBNull.Value)
+                VagOperations vagOperations = new VagOperations()
                 {
-                    vagOperations.Id_tupik = Int32.Parse(row["id_tupik"].ToString());
-                    vagOperations.Tupik = row["tupik"].ToString().Trim();
-                }
-                if (row["id_gdstait"] != DBNull.Value)
-                {
-                    vagOperations.Id_gdstait = Int32.Parse(row["id_gdstait"].ToString());
-                    vagOperations.Gdstait = row["gdstait"].ToString().Trim();
-                }
-                if (row["id_nazn_country"] != DBNull.Value)
-                {
-                    vagOperations.Id_nazn_country = Int32.Parse(row["id_nazn_country"].ToString());
-                    vagOperations.Nazn_country = row["nazn_country"].ToString().Trim();
-                }
-                if (row["note"] != DBNull.Value) vagOperations.Note = row["note"].ToString().Trim();
+                    // Общая информация
 
-                if (row["st_otpr"] != DBNull.Value) vagOperations.Outer_station = row["st_otpr"].ToString().Trim();
+                    id_oper = -1,
+                    dt_uz = row["dt_uz"] != DBNull.Value ? row["dt_uz"] as DateTime? : null,
+                    dt_amkr = row["dt_amkr"] != DBNull.Value ? row["dt_amkr"] as DateTime? : null,
+                    dt_out_amkr = row["dt_out_amkr"] != DBNull.Value ? row["dt_out_amkr"] as DateTime? : null,
+                    id_sostav = row["IDSostav"] != DBNull.Value ? int.Parse(row["IDSostav"].ToString()): -1,
+                    id_vag = row["id_vagon"] != DBNull.Value ? int.Parse(row["id_vagon"].ToString()): -1,
+                    num_vag = row["num_vagon"] != DBNull.Value ? int.Parse(row["num_vagon"].ToString()) : -1,
+                    dt_on_stat = row["dt_on_stat"] != DBNull.Value ? row["dt_on_stat"] as DateTime? : null,
+                    dt_from_stat = row["dt_from_stat"] != DBNull.Value ? row["dt_from_stat"] as DateTime? : null,
+                    dt_on_way = row["dt_on_way"] != DBNull.Value ? row["dt_on_way"] as DateTime? : null,
+                    dt_from_way = row["dt_from_way"] != DBNull.Value ? row["dt_from_way"] as DateTime? : null,
+                    num_vag_on_way = row["num_vag_on_way"] != DBNull.Value ? int.Parse(row["num_vag_on_way"].ToString()) : -1,
+                    id_godn = row["id_cond"] != DBNull.Value ? int.Parse(row["id_cond"].ToString()) : -1,
+                    godn = row["cond"] != DBNull.Value ? row["cond"] as string : "",
+                    
+                    cond = new Cond() {
+                        Id = row["id_cond2"] != DBNull.Value ? int.Parse(row["id_cond2"].ToString()) : -1,
+                        Name = row["cond2"] != DBNull.Value ? row["cond2"] as string : "",
+                        Id_cond_after = row["id_cond_after"] != DBNull.Value ? int.Parse(row["id_cond_after"].ToString()) : -1,
+                    },
+                    grvuSAP = row["grvu_SAP"] != DBNull.Value ? row["grvu_SAP"] as string : "",
+                    ngruSAP = row["ngru_SAP"] != DBNull.Value ? row["ngru_SAP"] as string : "",
 
-                if (row["grvu_SAP"] != DBNull.Value) vagOperations.GrvuSAP = row["grvu_SAP"].ToString().Trim();
-                if (row["ngru_SAP"] != DBNull.Value) vagOperations.NgruSAP = row["ngru_SAP"].ToString().Trim();
 
-                if (row["date_mail"] != DBNull.Value) vagOperations.MailDate = DateTime.Parse(row["date_mail"].ToString());
-                if (row["n_mail"] != DBNull.Value) vagOperations.MailNum = row["n_mail"].ToString().Trim();
-                if (row["text"] != DBNull.Value) vagOperations.MailText = row["text"].ToString().Trim();
-                if (row["nm_stan"] != DBNull.Value) vagOperations.MailStat = row["nm_stan"].ToString().Trim();
-                if (row["nm_sobstv"] != DBNull.Value) vagOperations.MailSobstv = row["nm_sobstv"].ToString().Trim();
+                    // Справочник Wagons
+                    rod = row["rod"] != DBNull.Value ? row["rod"] as string : "",
+                    owner = row["owner_"] != DBNull.Value ? row["owner_"] as string : "",
+                    own_country = row["country"] != DBNull.Value ? row["country"] as string : "",
 
+                    wagon_country = row["wagon_country"] != DBNull.Value ? row["wagon_country"] as string : "",
+
+                    //Cправочник САП вх. поставки
+                    id_gruz = row["id_gruz"] != DBNull.Value ? int.Parse(row["id_gruz"].ToString()) : -1,
+                    gruz = row["gruz"] != DBNull.Value ? row["gruz"] as string : "",
+                    weight_gruz = row["weight_gruz"] != DBNull.Value ? Double.Parse(row["weight_gruz"].ToString()) : 0,
+                    id_ceh_gruz = row["id_shop_gruz_for"] != DBNull.Value ? int.Parse(row["id_shop_gruz_for"].ToString()) : -1,
+                    ceh_gruz = row["shop"] != DBNull.Value ? row["shop"] as string : "",
+                    outer_station = row["st_otpr"] != DBNull.Value ? row["st_otpr"] as string : "",
+
+                    NumNakl = row["NumNakl"] != DBNull.Value ? row["NumNakl"] as int? : null, // Номер накладной
+                    CargoName = row["CargoName"] != DBNull.Value ? row["CargoName"].ToString().Trim() : "",
+                    WeightDoc = row["WeightDoc"] != DBNull.Value ? Double.Parse(row["WeightDoc"].ToString()) : 0,
+                    DocNumReweighing = row["DocNumReweighing"] != DBNull.Value ? row["DocNumReweighing"] as int? : null, // Номер отвесной
+                    DocDataReweighing = row["DocDataReweighing"] != DBNull.Value ? row["DocDataReweighing"] as DateTime? : null,
+                    WeightReweighing = row["WeightReweighing"] != DBNull.Value ? row["WeightReweighing"] as double? : null,
+                    DateTimeReweighing = row["DateTimeReweighing"] != DBNull.Value ? row["DateTimeReweighing"] as DateTime? : null,
+                    CodeMaterial = row["CodeMaterial"] != DBNull.Value ? row["CodeMaterial"] as int? : null, 
+                    NameMaterial = row["NameMaterial"] != DBNull.Value ? row["NameMaterial"].ToString().Trim() : "",
+                    CodeStationShipment = row["CodeStationShipment"] != DBNull.Value ? row["CodeStationShipment"].ToString().Trim() : "",
+                    NameStationShipment = row["NameStationShipment"] != DBNull.Value ? row["NameStationShipment"].ToString().Trim() : "",
+                    CodeShop = row["CodeShop"] != DBNull.Value ? row["CodeShop"] as int? : null,
+                    NameShop = row["NameShop"] != DBNull.Value ? row["NameShop"].ToString().Trim() : "",
+                    CodeNewShop = row["CodeNewShop"] != DBNull.Value ? row["CodeNewShop"] as int? : null,
+                    NameNewShop = row["NameNewShop"] != DBNull.Value ? row["NameNewShop"].ToString().Trim() : "",
+                    PermissionUnload = row["PermissionUnload"] != DBNull.Value ? bool.Parse(row["PermissionUnload"].ToString()) : false,
+                    Step1 = row["Step1"] != DBNull.Value ? bool.Parse(row["Step1"].ToString()) : false,
+                    Step2 = row["Step2"] != DBNull.Value ? bool.Parse(row["Step2"].ToString()) : false,
+
+
+                    //Cправочник САП выход. поставки //TODO: Переделать переход на новый справочник САП выход. поставки
+                    id_gruz_amkr = row["id_gruz_amkr"] != DBNull.Value ? int.Parse(row["id_gruz_amkr"].ToString()) : -1,
+                    gruz_amkr = row["gruz_amkr"] != DBNull.Value ? row["gruz_amkr"] as string : "",
+                    id_tupik = row["id_tupik"] != DBNull.Value ? int.Parse(row["id_tupik"].ToString()) : -1,
+                    tupik = row["tupik"] != DBNull.Value ? row["tupik"] as string : "",
+                    id_gdstait = row["id_gdstait"] != DBNull.Value ? int.Parse(row["id_gdstait"].ToString()) : -1,
+                    gdstait = row["gdstait"] != DBNull.Value ? row["gdstait"] as string : "",
+                    id_nazn_country = row["id_nazn_country"] != DBNull.Value ? int.Parse(row["id_nazn_country"].ToString()) : -1,
+                    nazn_country = row["nazn_country"] != DBNull.Value ? row["nazn_country"] as string : "",
+                    note = row["note"] != DBNull.Value ? row["note"] as string : "",
+
+                    // Справочник писем
+                    MailDate = row["date_mail"] != DBNull.Value ? row["date_mail"] as DateTime? : null,
+                    MailNum = row["n_mail"] != DBNull.Value ? row["n_mail"].ToString().Trim() : "",
+                    MailText = row["text"] != DBNull.Value ? row["text"].ToString().Trim() : "",
+                    MailStat = row["nm_stan"] != DBNull.Value ? row["nm_stan"].ToString().Trim() : "",
+                    MailSobstv = row["nm_sobstv"] != DBNull.Value ? row["nm_sobstv"].ToString().Trim() : "",
+                };
                 list.Add(vagOperations);
             }
-
             return list;
         }
+
+        //protected List<VagOperations> getVagons1(DataTable table)
+        //{
+        //    List<VagOperations> list = new List<VagOperations>();
+
+        //    foreach (DataRow row in table.Rows)
+        //    {
+        //        VagOperations vagOperations = new VagOperations();
+        //        // Общая информация
+
+        //        vagOperations.id_oper = Int32.Parse(row["id_oper"].ToString());
+        //        if (row["dt_uz"] != DBNull.Value) vagOperations.DT_uz = DateTime.Parse(row["dt_uz"].ToString());        // отправка с УЗ
+        //        if (row["dt_amkr"] != DBNull.Value) vagOperations.dt_amkr = DateTime.Parse(row["dt_amkr"].ToString());
+        //        if (row["dt_out_amkr"] != DBNull.Value) vagOperations.Dt_out_amkr = DateTime.Parse(row["dt_out_amkr"].ToString());
+        //        vagOperations.IDSostav = row["IDSostav"] != DBNull.Value ? int.Parse(row["IDSostav"].ToString()) : -1;
+
+
+        //        if (row["num_vag_on_way"] != DBNull.Value) vagOperations.num_vag_on_way = Int32.Parse(row["num_vag_on_way"].ToString());//table.Rows.IndexOf(row) + 1;
+        //        if (row["id_vagon"] != DBNull.Value) vagOperations.id_vag = Int32.Parse(row["id_vagon"].ToString());  //TODO: Убрать переход на новый справочник Wagons
+        //        if (row["num_vagon"] != DBNull.Value) vagOperations.num_vag = Int32.Parse(row["num_vagon"].ToString());
+        //        if (row["rod"] != DBNull.Value) vagOperations.rod = row["rod"].ToString().Trim();
+
+
+        //        if (row["dt_on_way"] != DBNull.Value) vagOperations.dt_on_way = DateTime.Parse(row["dt_on_way"].ToString());
+        //        if (row["dt_on_stat"] != DBNull.Value) vagOperations.dt_on_stat = DateTime.Parse(row["dt_on_stat"].ToString());
+        //        if (row["dt_from_stat"] != DBNull.Value) vagOperations.Dt_from_stat = DateTime.Parse(row["dt_from_stat"].ToString());
+        //        else vagOperations.Dt_from_stat = null;
+        //        // Справочник Wagons
+
+        //        //Cправочник САП вх. поставки
+
+        //        //Cправочник САП вsх. поставки
+
+        //        if (row["owner_"] != DBNull.Value) vagOperations.owner = row["owner_"].ToString().Trim(); // абр. владельца
+        //        if (row["country"] != DBNull.Value) vagOperations.own_country = row["country"].ToString().Trim(); //TODO: Убрать переход на новый справочник САП вх. поставки
+        //        if (row["Country"] != DBNull.Value) vagOperations.own_country = row["Country"].ToString().Trim(); // Стана вагона берем из справочника САП вх. поставки
+        //        if (row["id_cond"] != DBNull.Value) vagOperations.id_godn = Int32.Parse(row["id_cond"].ToString());
+        //        if (row["cond"] != DBNull.Value) vagOperations.godn = row["cond"].ToString().Trim();
+        //        if (row["id_cond2"] != DBNull.Value) vagOperations.cond.Id = Int32.Parse(row["id_cond2"].ToString());
+        //        if (row["cond2"] != DBNull.Value) vagOperations.cond.Name = row["cond2"].ToString().Trim();
+        //        if (row["id_cond_after"] != DBNull.Value) vagOperations.cond.Id_cond_after = Int32.Parse(row["id_cond_after"].ToString());
+        //        if (row["id_gruz"] != DBNull.Value) vagOperations.id_gruz = Int32.Parse(row["id_gruz"].ToString());//TODO: Убрать переход на новый справочник САП вх. поставки
+        //        if (row["gruz"] != DBNull.Value) vagOperations.gruz = row["gruz"].ToString().Trim(); //TODO: Убрать переход на новый справочник САП вх. поставки
+
+
+        //        if (row["id_gruz_amkr"] != DBNull.Value) vagOperations.id_gruz_amkr = Int32.Parse(row["id_gruz_amkr"].ToString()); //TODO: В дальнейшем переход на новый справочник САП выход. поставки
+        //        if (row["gruz_amkr"] != DBNull.Value) vagOperations.gruz_amkr = row["gruz_amkr"].ToString().Trim(); //TODO: В дальнейшем переход на новый справочник САП выход. поставки
+
+
+        //        if (row["weight_gruz"] != DBNull.Value) vagOperations.weight_gruz = Double.Parse(row["weight_gruz"].ToString());//TODO: Убрать переход на новый справочник САП вх. поставки
+        //        if (row["id_shop_gruz_for"] != DBNull.Value) vagOperations.id_ceh_gruz = Int32.Parse(row["id_shop_gruz_for"].ToString());//TODO: Убрать переход на новый справочник САП вх. поставки
+        //        if (row["shop"] != DBNull.Value) vagOperations.ceh_gruz = row["shop"].ToString().Trim();//TODO: Убрать переход на новый справочник САП вх. поставки
+        //        if (row["id_tupik"] != DBNull.Value)
+        //        {
+        //            vagOperations.id_tupik = Int32.Parse(row["id_tupik"].ToString());
+        //            vagOperations.tupik = row["tupik"].ToString().Trim();
+        //        }
+        //        if (row["id_gdstait"] != DBNull.Value)
+        //        {
+        //            vagOperations.id_gdstait = Int32.Parse(row["id_gdstait"].ToString());
+        //            vagOperations.gdstait = row["gdstait"].ToString().Trim();
+        //        }
+        //        if (row["id_nazn_country"] != DBNull.Value)//TODO: В дальнейшем переход на новый справочник САП выход. поставки
+        //        {
+        //            vagOperations.id_nazn_country = Int32.Parse(row["id_nazn_country"].ToString());
+        //            vagOperations.nazn_country = row["nazn_country"].ToString().Trim();
+        //        }
+        //        if (row["note"] != DBNull.Value) vagOperations.note = row["note"].ToString().Trim();//TODO: В дальнейшем переход на новый справочник САП выход. поставки
+
+        //        if (row["st_otpr"] != DBNull.Value) vagOperations.outer_station = row["st_otpr"].ToString().Trim();//TODO: Убрать переход на новый справочник САП вх. поставки
+
+        //        if (row["grvu_SAP"] != DBNull.Value) vagOperations.grvuSAP = row["grvu_SAP"].ToString().Trim();
+        //        if (row["ngru_SAP"] != DBNull.Value) vagOperations.ngruSAP = row["ngru_SAP"].ToString().Trim();
+
+        //        if (row["date_mail"] != DBNull.Value) vagOperations.MailDate = DateTime.Parse(row["date_mail"].ToString());
+        //        if (row["n_mail"] != DBNull.Value) vagOperations.MailNum = row["n_mail"].ToString().Trim();
+        //        if (row["text"] != DBNull.Value) vagOperations.MailText = row["text"].ToString().Trim();
+        //        if (row["nm_stan"] != DBNull.Value) vagOperations.MailStat = row["nm_stan"].ToString().Trim();
+        //        if (row["nm_sobstv"] != DBNull.Value) vagOperations.MailSobstv = row["nm_sobstv"].ToString().Trim();
+
+        //        list.Add(vagOperations);
+        //    }
+
+        //    return list;
+        //}
 
         public bool changeNumVagsAfterCancel(Way way, Train train, List<VagOperations> vagons)
         {
@@ -150,8 +260,8 @@ namespace RailwayCL
                 foreach (VagOperations vag in vagons)
                 {
                     if (vagons.IndexOf(vag) == vagons.Count - 1)
-                        str += vag.Id_oper.ToString() + ")";
-                    else str += vag.Id_oper.ToString() + ",";
+                        str += vag.id_oper.ToString() + ")";
+                    else str += vag.id_oper.ToString() + ",";
                 }
             }
             string query = string.Format("update t1 " +

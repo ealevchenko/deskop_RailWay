@@ -317,12 +317,12 @@ namespace RailwayCL
                     {
                         bool isShop = false;
                         if (view.selectedShop != null) isShop = true;
-                        dt_from_stat = item.Dt_from_stat;
+                        dt_from_stat = item.dt_from_stat;
                         mainPresenter.changeLoadCond(item, isShop);
                     }
                     mainPresenter.changeConditionWayAfter(item, view.selectedWay);
 
-                    vagSendOthStDB.send(item.Id_oper, item.Cond.Id, dt_from_stat, DateTime.Now);
+                    vagSendOthStDB.send(item.id_oper, item.cond.Id, dt_from_stat, DateTime.Now);
                 }
 
                 changeVagNumsWayFrom(); // изменить нумерацию вагонов на пути изъятия
@@ -394,12 +394,12 @@ namespace RailwayCL
                 VagSendOthSt vagon = view.firstSelVagToSend;
                 for (int i = 0; i <= srCount - 1; i++)
                 {
-                    if (vagSendOthStDB.cancelVagToSend(vagon.Id_oper))
+                    if (vagSendOthStDB.cancelVagToSend(vagon.id_oper))
                     {
                         // убрать выделение цветом
-                        view.setVagForSendColor(vagon.Num_vag_on_way - 1, Color.Empty);
+                        view.setVagForSendColor(vagon.num_vag_on_way - 1, Color.Empty);
                         // убрать дату снятия с пути
-                        view.listForSending[vagon.Num_vag_on_way - 1].DT_from_way = null;
+                        view.listForSending[vagon.num_vag_on_way - 1].dt_from_way = null;
                         view.removeFromVagToSend(vagon);
                     }
                 }
@@ -449,10 +449,10 @@ namespace RailwayCL
             bool questResult = true;
 
             List<VagSendOthSt> listSendOthSt = new List<VagSendOthSt>(view.listToSend);
-            listSendOthSt = listSendOthSt.OrderBy(x => x.Num_vag_on_way).ToList();
+            listSendOthSt = listSendOthSt.OrderBy(x => x.num_vag_on_way).ToList();
             if (!listSendOthSt.SequenceEqual(view.listToSend))
             {
-                listSendOthSt.OrderByDescending(x => x.Num_vag_on_way).ToList();
+                listSendOthSt.OrderByDescending(x => x.num_vag_on_way).ToList();
                 if (!listSendOthSt.SequenceEqual(view.listToSend))
                 {
                     questResult = false;
@@ -465,7 +465,7 @@ namespace RailwayCL
             {
                 try
                 {
-                    if (Math.Abs(view.listToSend[i + 1].Num_vag_on_way - view.listToSend[i].Num_vag_on_way) > 1)
+                    if (Math.Abs(view.listToSend[i + 1].num_vag_on_way - view.listToSend[i].num_vag_on_way) > 1)
                     {
                         questResult = false;
                         questResult = main.showQuestMessage("Возможно Вы пропустили некоторые вагоны! Продолжить?");
@@ -496,8 +496,8 @@ namespace RailwayCL
                         VagSendOthSt vagon = view.listForSending[i];
                         view.removeFromVagToSend(vagon);
                         view.setVagForSendColor(i, Color.Empty);
-                        vagon.DT_from_way = null;
-                        vagSendOthStDB.cancelVagToSend(vagon.Id_oper);
+                        vagon.dt_from_way = null;
+                        vagSendOthStDB.cancelVagToSend(vagon.id_oper);
                     }
                 }
             //}
@@ -654,8 +654,8 @@ namespace RailwayCL
         {
             List<VagSendOthSt> listSendOthSt = view.listToSend;
             if (main.numSide == view.selectedSide)
-                view.bindVagToSendToSource(listSendOthSt.OrderBy(x => x.Num_vag_on_way).ToList());
-            else view.bindVagToSendToSource(listSendOthSt.OrderByDescending(x => x.Num_vag_on_way).ToList());
+                view.bindVagToSendToSource(listSendOthSt.OrderBy(x => x.num_vag_on_way).ToList());
+            else view.bindVagToSendToSource(listSendOthSt.OrderByDescending(x => x.num_vag_on_way).ToList());
         }
 
         private void changeVagNumsWayFrom()
@@ -663,7 +663,7 @@ namespace RailwayCL
             List<VagSendOthSt> remainedVagons = view.getRemainedVagForSending();
             foreach (VagSendOthSt item in remainedVagons)
             {
-                vagSendOthStDB.changeVagNumsWayFrom(remainedVagons.IndexOf(item) + 1, item.Id_oper);
+                vagSendOthStDB.changeVagNumsWayFrom(remainedVagons.IndexOf(item) + 1, item.id_oper);
             }
         }
 
@@ -678,7 +678,7 @@ namespace RailwayCL
             string condName = "";
             try
             {
-                condName = view.listForSending[0].Cond.Name;
+                condName = view.listForSending[0].cond.Name;
             }
             catch (ArgumentOutOfRangeException) { }
             return condName;

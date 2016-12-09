@@ -184,7 +184,7 @@ namespace RailwayCL
 
             for (int i = 0; i <= srCount - 1; i++)
             {
-                view.setVagColor(view.firstSelVagToAdm.Num_vag_on_way - 1, Color.Empty);
+                view.setVagColor(view.firstSelVagToAdm.num_vag_on_way - 1, Color.Empty);
                 view.removeFromVagToAdm(view.firstSelVagToAdm);
             }
             view.clearVagForAdmSel();
@@ -232,22 +232,22 @@ namespace RailwayCL
                         if (main.numSide == view.sidePerformAdmissTrain || view.sidePerformAdmissTrain == Side.Empty)
                         {
                             if (main.selectedStation.ID == 17 && isShop)
-                                item.Num_vag_on_way = list.IndexOf(item) + 1;
-                            else item.Num_vag_on_way = list.Count - list.IndexOf(item);
-                            log.Info("item.Num_vag_on_way:" + item.Num_vag_on_way.ToString());
+                                item.num_vag_on_way = list.IndexOf(item) + 1;
+                            else item.num_vag_on_way = list.Count - list.IndexOf(item);
+                            log.Info("item.num_vag_on_way:" + item.num_vag_on_way.ToString());
                         }
                         else
                         {
-                            item.Num_vag_on_way = view.wayPerformAdmissTrain.Vag_amount + list.IndexOf(item) + 1;
-                            log.Info("item.Num_vag_on_way:" + item.Num_vag_on_way.ToString());
+                            item.num_vag_on_way = view.wayPerformAdmissTrain.Vag_amount + list.IndexOf(item) + 1;
+                            log.Info("item.num_vag_on_way:" + item.num_vag_on_way.ToString());
                         }
 
                         int ins_result = vagWaitAdmissDB.execAdmissOthStat(item, main.selectedStation,
-                            view.wayPerformAdmissTrain, item.Dt_on_stat/*view.dtArriveAdmissTrain*/, view.getSelTrain(isGF, isShop).St_lock_locom1, view.getSelTrain(isGF, isShop).St_lock_locom2);
-                        //if (ins_result != null) ((VagWaitAdmiss)bs1P2.List[bs1P2.IndexOf(item)]).Id_oper = Convert.ToInt32(ins_result);
+                            view.wayPerformAdmissTrain, (DateTime)item.dt_on_stat/*view.dtArriveAdmissTrain*/, view.getSelTrain(isGF, isShop).St_lock_locom1, view.getSelTrain(isGF, isShop).St_lock_locom2);
+                        //if (ins_result != null) ((VagWaitAdmiss)bs1P2.List[bs1P2.IndexOf(item)]).id_oper = Convert.ToInt32(ins_result);
                         if (ins_result != -1)
                         {
-                            item.Id_oper = ins_result;
+                            item.id_oper = ins_result;
                             log.Info("ins_result: " + ins_result);
                         }
                         else return;
@@ -256,10 +256,10 @@ namespace RailwayCL
                     //if (main.numSide == view.sidePerformAdmissTrain || !isStat)
                     if (main.numSide == view.sidePerformAdmissTrain || view.sidePerformAdmissTrain == Side.Empty)
                     // изменить нумерацию вагонов на пути назначения
-                    //new VagOperationsDB().changeVagNumsWayOn(list.Count, ((VagWaitAdmiss)bs1P2.List[bs1P2.IndexOf(list[0])]).Id_oper, vagAcceptForm.getWay());
+                    //new VagOperationsDB().changeVagNumsWayOn(list.Count, ((VagWaitAdmiss)bs1P2.List[bs1P2.IndexOf(list[0])]).id_oper, vagAcceptForm.getWay());
                     {
-                        vagOperationsDB.changeVagNumsWayOn(list.Count, list[0].Id_oper, view.wayPerformAdmissTrain);
-                        log.Info("list[0].Id_oper" + list[0].Id_oper);
+                        vagOperationsDB.changeVagNumsWayOn(list.Count, list[0].id_oper, view.wayPerformAdmissTrain);
+                        log.Info("list[0].id_oper" + list[0].id_oper);
                     }
 
                     if (!isGF || !leftVagOnGf)
@@ -315,21 +315,21 @@ namespace RailwayCL
                         if (main.numSide == view.sidePerformAdmissTrain || view.sidePerformAdmissTrain == Side.Empty)
                         {
                             if (main.selectedStation.ID == 17 && isShop)
-                                item.Num_vag_on_way = list.IndexOf(item) + 1;
-                            else item.Num_vag_on_way = list.Count - list.IndexOf(item);
-                            log.Info("item.Num_vag_on_way:" + item.Num_vag_on_way.ToString());
+                                item.num_vag_on_way = list.IndexOf(item) + 1;
+                            else item.num_vag_on_way = list.Count - list.IndexOf(item);
+                            log.Info("item.num_vag_on_way:" + item.num_vag_on_way.ToString());
                         }
                         else
                         {
-                            item.Num_vag_on_way = view.wayPerformAdmissTrain.Vag_amount + list.IndexOf(item) + 1;
-                            log.Info("item.Num_vag_on_way:" + item.Num_vag_on_way.ToString());
+                            item.num_vag_on_way = view.wayPerformAdmissTrain.Vag_amount + list.IndexOf(item) + 1;
+                            log.Info("item.num_vag_on_way:" + item.num_vag_on_way.ToString());
                         }
 
                         int ins_result = vagWaitAdmissDB.execAdmissOthStat(item, main.selectedStation,
                             view.wayPerformAdmissTrain, view.dtArriveAdmissTrain, view.getSelTrain(isGF, isShop).St_lock_locom1, view.getSelTrain(isGF, isShop).St_lock_locom2);
                         if (ins_result != -1)
                         {
-                            item.Id_oper = ins_result;
+                            item.id_oper = ins_result;
                             log.Info("ins_result: " + ins_result);
                         }
                         else return;
@@ -339,8 +339,8 @@ namespace RailwayCL
                     if (main.numSide == view.sidePerformAdmissTrain || view.sidePerformAdmissTrain == Side.Empty)
                     // изменить нумерацию вагонов на пути назначения
                     {
-                        vagOperationsDB.changeVagNumsWayOn(list.Count, list[0].Id_oper, view.wayPerformAdmissTrain);
-                        log.Info("list[0].Id_oper" + list[0].Id_oper);
+                        vagOperationsDB.changeVagNumsWayOn(list.Count, list[0].id_oper, view.wayPerformAdmissTrain);
+                        log.Info("list[0].id_oper" + list[0].id_oper);
                     }
 
                     //убрать вагоны выделенные желтым
@@ -399,9 +399,9 @@ namespace RailwayCL
 
                     if (main.numSide == arriveSide)
                     {
-                        item.Num_vag_on_way = listOnSameWay.Count - listOnSameWay.IndexOf(item);
+                        item.num_vag_on_way = listOnSameWay.Count - listOnSameWay.IndexOf(item);
                     }
-                    else item.Num_vag_on_way = item.WayFact.Vag_amount + listOnSameWay.IndexOf(item) + 1;
+                    else item.num_vag_on_way = item.WayFact.Vag_amount + listOnSameWay.IndexOf(item) + 1;
 
                     //определение состояния вагона
                     mainPresenter.changeConditionWayOn(item, item.WayFact);
@@ -409,7 +409,7 @@ namespace RailwayCL
 
                     int ins_result = vagWaitAdmissDB.execAdmissOthStat(item, main.selectedStation,
                         item.WayFact, DateTime.Now, view.getSelTrain(false, false).St_lock_locom1, view.getSelTrain(false, false).St_lock_locom2);
-                    if (ins_result != -1) view.listWaitAdmiss[view.listWaitAdmiss.IndexOf(item)].Id_oper = ins_result;
+                    if (ins_result != -1) view.listWaitAdmiss[view.listWaitAdmiss.IndexOf(item)].id_oper = ins_result;
                     else return;
                 }
 
@@ -417,11 +417,11 @@ namespace RailwayCL
                 // изменить нумерацию вагонов на пути назначения
                 {
                     var result = list.GroupBy(l => l.WayFact.ID).Select(c1 =>
-                        new { Quantity = c1.Count(), Id_oper = c1.First().Id_oper, wayFact = c1.First().WayFact }).ToList();
+                        new { Quantity = c1.Count(), id_oper = c1.First().id_oper, wayFact = c1.First().WayFact }).ToList();
 
                     foreach (var item in result)
                     {
-                        vagOperationsDB.changeVagNumsWayOn(item.Quantity, item.Id_oper, item.wayFact);
+                        vagOperationsDB.changeVagNumsWayOn(item.Quantity, item.id_oper, item.wayFact);
                     }
                 }
 
@@ -467,24 +467,24 @@ namespace RailwayCL
 
                     foreach (VagWaitAdmiss item in list)
                     {
-                        item.Num_vag_on_way = list.IndexOf(item) + 1;
+                        item.num_vag_on_way = list.IndexOf(item) + 1;
 
                         //принятие на станцию транзита
                         object ins_result = vagWaitAdmissDB.execAdmissOthStat(item, main.selectedStation,
                             view.wayPerformTransit, view.dtArriveTransit, view.getSelTrain(false, false).St_lock_locom1, view.getSelTrain(false, false).St_lock_locom2);
-                        if (ins_result != null) view.listWaitAdmiss[view.listWaitAdmiss.IndexOf(item)].Id_oper = Convert.ToInt32(ins_result);
+                        if (ins_result != null) view.listWaitAdmiss[view.listWaitAdmiss.IndexOf(item)].id_oper = Convert.ToInt32(ins_result);
                         else return;
 
                         //данные о след. станции, на кот. отправл. 
                         VagSendOthSt vagSendOthSt = new VagSendOthSt(item);
                         vagSendOthSt.St_lock_id_stat = view.statPerformTransit.ID;
-                        vagSendOthSt.St_lock_order = item.Num_vag_on_way;
+                        vagSendOthSt.St_lock_order = item.num_vag_on_way;
                         vagSendOthSt.St_lock_train = view.getSelTrain(false, false).Num;
                         vagSendOthSt.St_lock_side = neighbourStationsDB.getSendSide(main.selectedStation, view.statPerformTransit);
                         vagSendOthStDB.addToSend(vagSendOthSt);
 
                         //отправление со станции транзита
-                        vagSendOthStDB.send(item.Id_oper, item.Cond.Id, view.dtArriveTransit, view.dtArriveTransit);
+                        vagSendOthStDB.send(item.id_oper, item.cond.Id, view.dtArriveTransit, view.dtArriveTransit);
                     }
 
                     //удаляем строку поезда
@@ -523,7 +523,7 @@ namespace RailwayCL
                         return;
                     }
                 }
-                vagWaitAdmissDB.changeNumVagsAfterCancel(wayDB.getWayByIdOper(view.listWaitAdmiss[0].Id_oper), train, list.Cast<VagOperations>().ToList());
+                vagWaitAdmissDB.changeNumVagsAfterCancel(wayDB.getWayByIdOper(view.listWaitAdmiss[0].id_oper), train, list.Cast<VagOperations>().ToList());
                 vagWaitAdmissDB.cancelGfOrShopSending(train, main.selectedStation, isGf, list);
                 main.showInfoMessage("Отмена произведена успешно!");
 
@@ -638,20 +638,20 @@ namespace RailwayCL
                     }
                     field = 1;
                     //foreach (var prop in item.GetType().GetProperties())
-                    WSE.Cells[row, field++].Value = item.Num_vag_on_way;
-                    WSE.Cells[row, field++].Value = item.Num_vag;
+                    WSE.Cells[row, field++].Value = item.num_vag_on_way;
+                    WSE.Cells[row, field++].Value = item.num_vag;
                     if (brospusk) { WSE.Cells[row, field++].Value = item.WayFact.NumName; }
-                    WSE.Cells[row, field++].Value = item.Rod;
-                    WSE.Cells[row, field++].Value = item.Owner;
-                    WSE.Cells[row, field++].Value = item.Own_country;
-                    WSE.Cells[row, field++].Value = item.Godn;
-                    WSE.Cells[row, field++].Value = item.Gruz;
-                    if (!brospusk) { WSE.Cells[row, field++].Value = item.Cond.Name; }
-                    WSE.Cells[row, field++].Value = item.DT_amkr;
-                    WSE.Cells[row, field++].Value = item.Outer_station;
-                    WSE.Cells[row, field++].Value = item.Gruz_amkr;
-                    if (!brospusk) { WSE.Cells[row, field++].Value = item.Weight_gruz; }
-                    WSE.Cells[row, field++].Value = item.CehGruz;
+                    WSE.Cells[row, field++].Value = item.rod;
+                    WSE.Cells[row, field++].Value = item.owner;
+                    WSE.Cells[row, field++].Value = item.own_country;
+                    WSE.Cells[row, field++].Value = item.godn;
+                    WSE.Cells[row, field++].Value = item.gruz;
+                    if (!brospusk) { WSE.Cells[row, field++].Value = item.cond.Name; }
+                    WSE.Cells[row, field++].Value = item.dt_amkr;
+                    WSE.Cells[row, field++].Value = item.outer_station;
+                    WSE.Cells[row, field++].Value = item.gruz_amkr;
+                    if (!brospusk) { WSE.Cells[row, field++].Value = item.weight_gruz; }
+                    WSE.Cells[row, field++].Value = item.ceh_gruz;
                     WSE.Cells[row, field++].Value = item.MailDate;
                     WSE.Cells[row, field++].Value = item.MailNum;
                     WSE.Cells[row, field++].Value = item.MailText;
@@ -659,13 +659,13 @@ namespace RailwayCL
                     WSE.Cells[row, field++].Value = item.MailSobstv;
                     if (!brospusk)
                     {
-                        WSE.Cells[row, field++].Value = item.Gdstait;
-                        WSE.Cells[row, field++].Value = item.Note;
-                        WSE.Cells[row, field++].Value = item.Nazn_country;
-                        WSE.Cells[row, field++].Value = item.Tupik;
-                        WSE.Cells[row, field++].Value = item.GrvuSAP;
-                        WSE.Cells[row, field++].Value = item.NgruSAP;
-                        WSE.Cells[row, field++].Value = item.DT_on_way;
+                        WSE.Cells[row, field++].Value = item.gdstait;
+                        WSE.Cells[row, field++].Value = item.note;
+                        WSE.Cells[row, field++].Value = item.nazn_country;
+                        WSE.Cells[row, field++].Value = item.tupik;
+                        WSE.Cells[row, field++].Value = item.grvuSAP;
+                        WSE.Cells[row, field++].Value = item.ngruSAP;
+                        WSE.Cells[row, field++].Value = item.dt_on_way;
                     }
 
                     //WSE.Cells[row, field++].Value = item.WayPlan.NumName;
@@ -696,7 +696,7 @@ namespace RailwayCL
             List<VagWaitAdmiss> list = view.listWaitAdmiss;
             foreach (VagWaitAdmiss item in list)
             {
-                vagWaitAdmissDB.deleteVagOperations(item.Id_oper);
+                vagWaitAdmissDB.deleteVagOperations(item.id_oper);
             }
         }
 
@@ -713,7 +713,7 @@ namespace RailwayCL
             try
             {
                 List<VagWaitAdmiss> listVagFromCeh = view.listToAdmiss();
-                view.bindVagToAdmToSource(listVagFromCeh.OrderBy(x => x.Num_vag_on_way).ToList());
+                view.bindVagToAdmToSource(listVagFromCeh.OrderBy(x => x.num_vag_on_way).ToList());
             }
             catch (ArgumentNullException)
             {
@@ -770,14 +770,14 @@ namespace RailwayCL
 
         private void changeGruz(VagWaitAdmiss vag, bool isShop, SendingPoint sp, DateTime dtFromStat)
         {
-            if (vag.Gruz.Contains("порож") && isShop)
+            if (vag.gruz.Contains("порож") && isShop)
             {
                 getLoadingData(vag, (Shop)sp, dtFromStat);
             }
             else
             {
-                vag.Id_gruz = 6;
-                vag.Gruz = "порож";
+                vag.id_gruz = 6;
+                vag.gruz = "порож";
             }
         }
 
@@ -791,7 +791,7 @@ namespace RailwayCL
             string condName = "";
             try
             {
-                condName = view.listWaitAdmiss[0].Cond.Name;
+                condName = view.listWaitAdmiss[0].cond.Name;
             }
             catch (ArgumentOutOfRangeException) { }
             return condName;

@@ -44,7 +44,7 @@ namespace RailwayCL
             sqlParameters[1] = new SqlParameter("@side", way.Stat.Outer_side == side ? 1:0);
             return Conn.executeProc(query, sqlParameters).Tables[0];
 
-            //if (row["dt_from_way"] != DBNull.Value) vagOnStat.DT_from_way = DateTime.Parse(row["dt_from_way"].ToString());
+            //if (row["dt_from_way"] != DBNull.Value) vagOnStat.dt_from_way = DateTime.Parse(row["dt_from_way"].ToString());
         }
         //TODO: ПЕРЕХОД НА НОВОЕ ОПРЕДЕЛЕНИЕ ИНФОРМАЦИИ ПО ВАГОНАМ
         //private DataTable getVagonsTable(Way way, Side side)
@@ -76,7 +76,7 @@ namespace RailwayCL
 
         //    return Conn.executeSelectQuery(query, sqlParameters).Tables[0];
 
-        //                    //if (row["dt_from_way"] != DBNull.Value) vagOnStat.DT_from_way = DateTime.Parse(row["dt_from_way"].ToString());
+        //                    //if (row["dt_from_way"] != DBNull.Value) vagOnStat.dt_from_way = DateTime.Parse(row["dt_from_way"].ToString());
         //}
 
         private DataTable getVagonsTable(GruzFront gf)
@@ -158,7 +158,7 @@ namespace RailwayCL
             int i = 0;
             foreach (VagOnStat item in list)
             {
-                list[i].Num_vag_on_way = list.IndexOf(item) + 1;
+                list[i].num_vag_on_way = list.IndexOf(item) + 1;
 
                 i++;
             }

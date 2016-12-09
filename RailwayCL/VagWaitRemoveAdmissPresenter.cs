@@ -72,7 +72,7 @@ namespace RailwayCL
 
             for (int i = 0; i <= srCount - 1; i++)
             {
-                view.setVagColor(view.firstSelVagToCanc.Num_vag_on_way - 1, Color.Empty);
+                view.setVagColor(view.firstSelVagToCanc.num_vag_on_way - 1, Color.Empty);
                 view.removeFromVagToCanc(view.firstSelVagToCanc);
             }
             view.clearVagWaitRemoveAdmissSel();
@@ -98,7 +98,7 @@ namespace RailwayCL
                         return;
                     }
                 }
-                vagWaitRemoveAdmissDB.changeNumVagsAfterCancel(wayDB.getWayByIdOper(view.listVagons[0].Id_oper), train, list.Cast<VagOperations>().ToList());
+                vagWaitRemoveAdmissDB.changeNumVagsAfterCancel(wayDB.getWayByIdOper(view.listVagons[0].id_oper), train, list.Cast<VagOperations>().ToList());
                 vagWaitRemoveAdmissDB.cancelTrainSending(view.getSelTrain(), main.selectedStation, list);
                 main.showInfoMessage("Отмена произведена успешно!");
 
@@ -209,7 +209,7 @@ namespace RailwayCL
             string condName = "";
             try
             {
-                condName = view.listVagons[0].Cond.Name;
+                condName = view.listVagons[0].cond.Name;
             }
             catch (ArgumentOutOfRangeException) { }
             return condName;
@@ -220,7 +220,7 @@ namespace RailwayCL
             try
             {
                 List<VagWaitRemoveAdmiss> list = view.listToCancel;
-                view.bindVagToCancToSource(list.OrderBy(x => x.Num_vag_on_way).ToList());
+                view.bindVagToCancToSource(list.OrderBy(x => x.num_vag_on_way).ToList());
             }
             catch (ArgumentNullException)
             {

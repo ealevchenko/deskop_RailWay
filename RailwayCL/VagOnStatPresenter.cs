@@ -166,7 +166,7 @@ namespace RailwayCL
             string condName = "";
             try
             {
-                condName = view.listVagons[0].Cond.Name;
+                condName = view.listVagons[0].cond.Name;
             }
             catch (ArgumentOutOfRangeException) { }
             return condName;

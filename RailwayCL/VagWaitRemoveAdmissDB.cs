@@ -148,7 +148,7 @@ namespace RailwayCL
             int i = 0;
             foreach (DataRow row in table.Rows)
             {
-                list[i].Num_vag_on_way = table.Rows.IndexOf(row) + 1;
+                list[i].num_vag_on_way = table.Rows.IndexOf(row) + 1;
 
                 i++;
             }
@@ -170,8 +170,8 @@ namespace RailwayCL
                 foreach (VagWaitRemoveAdmiss vag in vagons)
                 {
                     if (vagons.IndexOf(vag) == vagons.Count - 1)
-                        query += vag.Id_oper.ToString() + ")";
-                    else query += vag.Id_oper.ToString() + ",";
+                        query += vag.id_oper.ToString() + ")";
+                    else query += vag.id_oper.ToString() + ",";
                 }
             }
             SqlParameter[] sqlParameters = new SqlParameter[2];

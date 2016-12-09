@@ -185,15 +185,15 @@ namespace RailwayCL
             {
                 RepProst repProst = new RepProst();
                 repProst.NumVag = Int32.Parse(row["num"].ToString());
-                if (row["owner"] != DBNull.Value) repProst.Owner = row["owner"].ToString().Trim();
+                if (row["owner"] != DBNull.Value) repProst.owner = row["owner"].ToString().Trim();
                 if (row["rod"] != DBNull.Value) repProst.TypeVag = row["rod"].ToString().Trim();
-                if (row["gruz"] != DBNull.Value) repProst.Gruz = row["gruz"].ToString().Trim();
-                if (row["godn"] != DBNull.Value) repProst.Godn = row["godn"].ToString().Trim();
-                if (row["cond"] != DBNull.Value) repProst.Cond = row["cond"].ToString().Trim();
+                if (row["gruz"] != DBNull.Value) repProst.gruz = row["gruz"].ToString().Trim();
+                if (row["godn"] != DBNull.Value) repProst.godn = row["godn"].ToString().Trim();
+                if (row["cond"] != DBNull.Value) repProst.cond = row["cond"].ToString().Trim();
                 if (row["way"] != DBNull.Value) repProst.NumWay = row["way"].ToString().Trim();
-                if (row["dt_amkr"] != DBNull.Value) repProst.Dt_Amkr = DateTime.Parse(row["dt_amkr"].ToString());
+                if (row["dt_amkr"] != DBNull.Value) repProst.dt_amkr = DateTime.Parse(row["dt_amkr"].ToString());
                 if (row["hour_on_amkr"] != DBNull.Value) repProst.Hour_Amkr = Int32.Parse(row["hour_on_amkr"].ToString());
-                if (row["dt_on_stat"] != DBNull.Value) repProst.Dt_on_stat = DateTime.Parse(row["dt_on_stat"].ToString());
+                if (row["dt_on_stat"] != DBNull.Value) repProst.dt_on_stat = DateTime.Parse(row["dt_on_stat"].ToString());
                 if (row["hour_on_stat"] != DBNull.Value) repProst.Hour_on_stat = Int32.Parse(row["hour_on_stat"].ToString());
                 list.Add(repProst);
             }
@@ -222,16 +222,16 @@ namespace RailwayCL
             {
                 RepProst repProst = new RepProst();
                 repProst.NumVag = Int32.Parse(row["num"].ToString());
-                if (row["owner"] != DBNull.Value) repProst.Owner = row["owner"].ToString().Trim();
+                if (row["owner"] != DBNull.Value) repProst.owner = row["owner"].ToString().Trim();
                 if (row["rod"] != DBNull.Value) repProst.TypeVag = row["rod"].ToString().Trim();
-                if (row["gruz"] != DBNull.Value) repProst.Gruz = row["gruz"].ToString().Trim();
-                if (row["godn"] != DBNull.Value) repProst.Godn = row["godn"].ToString().Trim();
-                if (row["cond"] != DBNull.Value) repProst.Cond = row["cond"].ToString().Trim();
+                if (row["gruz"] != DBNull.Value) repProst.gruz = row["gruz"].ToString().Trim();
+                if (row["godn"] != DBNull.Value) repProst.godn = row["godn"].ToString().Trim();
+                if (row["cond"] != DBNull.Value) repProst.cond = row["cond"].ToString().Trim();
                 if (row["stat"] != DBNull.Value) repProst.Station = row["stat"].ToString().Trim();
                 if (row["way"] != DBNull.Value) repProst.NumWay = row["way"].ToString().Trim();
-                if (row["dt_amkr"] != DBNull.Value) repProst.Dt_Amkr = DateTime.Parse(row["dt_amkr"].ToString());
+                if (row["dt_amkr"] != DBNull.Value) repProst.dt_amkr = DateTime.Parse(row["dt_amkr"].ToString());
                 if (row["hour_on_amkr"] != DBNull.Value) repProst.Hour_Amkr = Int32.Parse(row["hour_on_amkr"].ToString());
-                if (row["dt_on_stat"] != DBNull.Value) repProst.Dt_on_stat = DateTime.Parse(row["dt_on_stat"].ToString());
+                if (row["dt_on_stat"] != DBNull.Value) repProst.dt_on_stat = DateTime.Parse(row["dt_on_stat"].ToString());
                 if (row["hour_on_stat"] != DBNull.Value) repProst.Hour_on_stat = Int32.Parse(row["hour_on_stat"].ToString());
                 list.Add(repProst);
             }

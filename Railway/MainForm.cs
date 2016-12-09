@@ -750,7 +750,7 @@ namespace RailwayUI
             foreach (DataGridViewRow row in dgvForMan.Rows)
             {
                 row.DefaultCellStyle.BackColor = Color.Empty;
-                ((VagManeuver)ManBs1.List[row.Index]).DT_from_way = null;
+                ((VagManeuver)ManBs1.List[row.Index]).dt_from_way = null;
             }
         }
 
@@ -1214,7 +1214,7 @@ namespace RailwayUI
             foreach (DataGridViewRow row in dgvForSending.Rows)
             {
                 row.DefaultCellStyle.BackColor = Color.Empty;
-                ((VagSendOthSt)SendBs1.List[row.Index]).DT_from_way = null;
+                ((VagSendOthSt)SendBs1.List[row.Index]).dt_from_way = null;
             }
         }
 

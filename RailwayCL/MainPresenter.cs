@@ -53,43 +53,43 @@ namespace RailwayCL
         public void changeConditionWayOn(VagOperations vo, Way way)
         {
             if (way.Bind_cond.Id != -1)
-                vo.Cond.Id = way.Bind_cond.Id;
+                vo.cond.Id = way.Bind_cond.Id;
         }
 
         public void changeConditionWayAfter(VagOperations vo, Way way)
         {
             if (way.Bind_cond.Id != -1)
-                vo.Cond.Id = way.Bind_cond.Id_cond_after;
+                vo.cond.Id = way.Bind_cond.Id_cond_after;
         }
 
         public void changeLoadCond(VagOperations vo, bool isShop)
         {
-            if (vo.Gruz.Contains("порож") && isShop)
+            if (vo.gruz.Contains("порож") && isShop)
             {
-                vo.Cond.Id = 6;
+                vo.cond.Id = 6;
             }
             else
             {
-                vo.Cond.Id = 5;
+                vo.cond.Id = 5;
             }
         }
 
         public void changeLoadCondAfter(VagOperations vo)
         {
-            vo.Cond.Id = vo.Cond.Id_cond_after;
+            vo.cond.Id = vo.cond.Id_cond_after;
         }
 
         //public void changeGruz(VagOperations vo, bool isShop)
         //{
-        //    if (vo.Gruz.Contains("порож") && isShop)
+        //    if (vo.gruz.Contains("порож") && isShop)
         //    {
-        //        vo.Id_gruz = 87;
-        //        vo.Gruz = "пр.гр";
+        //        vo.id_gruz = 87;
+        //        vo.gruz = "пр.гр";
         //    }
         //    else
         //    {
-        //        vo.Id_gruz = 6;
-        //        vo.Gruz = "порож";
+        //        vo.id_gruz = 6;
+        //        vo.gruz = "порож";
         //    }
         //}
 
@@ -303,7 +303,7 @@ namespace RailwayCL
                 foreach (RepProst item in list)
                 {
                     WSE.Cells[row, 1].Value = item.NumVag;
-                    WSE.Cells[row, 2].Value = item.Owner;
+                    WSE.Cells[row, 2].Value = item.owner;
                     WSE.Cells[row, 3].Value = item.TypeVag;
                     if (!is_stat)
                     {
@@ -312,13 +312,13 @@ namespace RailwayCL
                     }
                     else col = 4;
                     WSE.Cells[row, col++].Value = item.NumWay;
-                    WSE.Cells[row, col++].Value = item.Gruz;
-                    WSE.Cells[row, col++].Value = item.Godn;
-                    WSE.Cells[row, col++].Value = item.Cond;
-                    WSE.Cells[row, col++].Value = item.Dt_Amkr;
+                    WSE.Cells[row, col++].Value = item.gruz;
+                    WSE.Cells[row, col++].Value = item.godn;
+                    WSE.Cells[row, col++].Value = item.cond;
+                    WSE.Cells[row, col++].Value = item.dt_amkr;
                     WSE.Cells[row, col++].Value = item.Hour_Amkr;
                     repProstColor(item.Hour_Amkr, WSE.get_Range((Excel.Range)WSE.Cells[row, col-1], (Excel.Range)WSE.Cells[row, col - 1]));
-                    WSE.Cells[row, col++].Value = item.Dt_on_stat;
+                    WSE.Cells[row, col++].Value = item.dt_on_stat;
                     WSE.Cells[row, col].Value = item.Hour_on_stat;
                     repProstColor(item.Hour_on_stat, WSE.get_Range((Excel.Range)WSE.Cells[row, col], (Excel.Range)WSE.Cells[row, col]));
                     row++;
