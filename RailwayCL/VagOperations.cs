@@ -53,13 +53,13 @@ namespace RailwayCL
         public DateTime? DocDataReweighing { get; set; } // дата отвесной по данным САП
         public double? WeightReweighing { get; set; } // Перевеска по по данным САП
         public DateTime? DateTimeReweighing { get; set; } // дата перевески по данным САП
-        public int? CodeMaterial { get; set; } // код материала по данным САП
+        public string CodeMaterial { get; set; } // код материала по данным САП
         public string NameMaterial { get; set; } // название материала по данным САП
         public string CodeStationShipment { get; set; } // код станции отпр. по данным САП
         public string NameStationShipment { get; set; } // название станции отпр. по данным САП
-        public int? CodeShop { get; set; } // код цеха получателя по данным САП
+        public string CodeShop { get; set; } // код цеха получателя по данным САП
         public string NameShop { get; set; } // название цеха получателя по данным САП
-        public int? CodeNewShop { get; set; } // код переадресовки цеха получателя по данным САП
+        public string CodeNewShop { get; set; } // код переадресовки цеха получателя по данным САП
         public string NameNewShop { get; set; } // название переадресовки цеха получателя по данным САП
         public bool PermissionUnload { get; set; } // разрешение на выгрузку по данным САП
         public bool Step1 { get; set; } // перенесены данные сап по данным САП
