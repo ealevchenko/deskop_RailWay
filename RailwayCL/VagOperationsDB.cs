@@ -24,7 +24,7 @@ namespace RailwayCL
             sqlParameters[1] = new SqlParameter("@id_stat", way.Stat.ID);
             sqlParameters[2] = new SqlParameter("@id_way", way.ID);
             sqlParameters[3] = new SqlParameter("@num_vag_on_way", vo.num_vag_on_way); // Номер вагона на пути
-            if (vo.dt_amkr < DateTime.Parse("1900-01-01 00:00"))
+            if (vo.dt_amkr < DateTime.Parse("1900-01-01 00:00") | (vo.dt_amkr == null))
                 sqlParameters[4] = new SqlParameter("@dt_amkr", DBNull.Value);
             else sqlParameters[4] = new SqlParameter("@dt_amkr", vo.dt_amkr);
             sqlParameters[5] = new SqlParameter("@id_oper", vo.id_oper);
@@ -84,7 +84,9 @@ namespace RailwayCL
                 {
                     // Общая информация
 
-                    id_oper = -1,
+                    //id_oper = -1,
+                    //TODO:Сделал определение id_oper (для закрытия старой записи)
+                    id_oper = row["id_oper"] != DBNull.Value ? int.Parse(row["id_oper"].ToString()) : -1,
                     dt_uz = row["dt_uz"] != DBNull.Value ? row["dt_uz"] as DateTime? : null,
                     dt_amkr = row["dt_amkr"] != DBNull.Value ? row["dt_amkr"] as DateTime? : null,
                     dt_out_amkr = row["dt_out_amkr"] != DBNull.Value ? row["dt_out_amkr"] as DateTime? : null,

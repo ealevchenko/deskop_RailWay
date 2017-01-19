@@ -284,7 +284,9 @@ namespace RailwayCL
                 main.showErrorMessage(ex.Message);
             }
         }
-
+        /// <summary>
+        /// Отправим вагоны на другую станцию
+        /// </summary>
         public void performSending()
         {
             try
