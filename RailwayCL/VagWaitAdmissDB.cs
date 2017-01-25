@@ -327,7 +327,7 @@ namespace RailwayCL
         /// <param name="locom1"></param>
         /// <param name="locom2"></param>
         /// <returns></returns>
-        public int execAdmissOthStat(VagWaitAdmiss vagWaitAdmiss, Station stat, Way way, DateTime dt_arriv, int locom1, int locom2)
+        public int execAdmissOthStat(VagWaitAdmiss vagWaitAdmiss, Station stat, Way way, DateTime? dt_arriv, int locom1, int locom2)
         {
             string query = string.Format("RailCars.ExecOtherStation_");
             SqlParameter[] sqlParameters = base.paramsForInsert((VagOperations)vagWaitAdmiss, way, 6);
@@ -336,7 +336,7 @@ namespace RailwayCL
 
             if (vagWaitAdmiss.cond.Id == -1) sqlParameters[i-6] = new SqlParameter("@id_cond2", DBNull.Value);
             else sqlParameters[i-6] = new SqlParameter("@id_cond2", vagWaitAdmiss.cond.Id);
-            if (dt_arriv < DateTime.Parse("1900-01-01 00:00"))
+            if (dt_arriv < DateTime.Parse("1900-01-01 00:00") | dt_arriv==null)
             {
                 sqlParameters[i - 5] = new SqlParameter("@dt_on_stat", DBNull.Value);
                 sqlParameters[i - 4] = new SqlParameter("@dt_on_way", DBNull.Value);

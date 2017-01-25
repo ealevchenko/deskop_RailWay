@@ -243,7 +243,7 @@ namespace RailwayCL
                         }
 
                         int ins_result = vagWaitAdmissDB.execAdmissOthStat(item, main.selectedStation,
-                            view.wayPerformAdmissTrain, (DateTime)item.dt_on_stat/*view.dtArriveAdmissTrain*/, view.getSelTrain(isGF, isShop).St_lock_locom1, view.getSelTrain(isGF, isShop).St_lock_locom2);
+                            view.wayPerformAdmissTrain, item.dt_on_stat/*view.dtArriveAdmissTrain*/, view.getSelTrain(isGF, isShop).St_lock_locom1, view.getSelTrain(isGF, isShop).St_lock_locom2);
                         //if (ins_result != null) ((VagWaitAdmiss)bs1P2.List[bs1P2.IndexOf(item)]).id_oper = Convert.ToInt32(ins_result);
                         if (ins_result != -1)
                         {
