@@ -247,7 +247,9 @@ namespace RailwayCL
                 main.showErrorMessage(ex.Message);
             }
         }
-
+        /// <summary>
+        /// Выполнить маневр на станции
+        /// </summary>
         public void performManeuver()
         {
     //        Log("\r\n" + DateTime.Now.ToString() + " Before maneuver. bsWayFrom: " + ((Way)ManBsWayFrom.List[dgvWayFrom.SelectedRows[0].Index]).Vag_amount.ToString() +
@@ -508,7 +510,9 @@ namespace RailwayCL
             //    return false;
             //}
         }
-
+        /// <summary>
+        /// Изменить нумерацию вагонов на пути изъятия
+        /// </summary>
         private void ManChangeVagNumsWayFrom()
         {
             List<VagManeuver> remainedVagons = view.getRemainedVagForMan();

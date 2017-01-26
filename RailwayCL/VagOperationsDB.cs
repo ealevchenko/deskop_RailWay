@@ -53,9 +53,18 @@ namespace RailwayCL
             sqlParameters[16] = new SqlParameter("@num_vagon", vo.num_vag);   //
             return sqlParameters;
         }
-
+        /// <summary>
+        ///  изменить нумерацию вагонов на пути на который поставили вагоны
+        /// </summary>
+        /// <param name="new_count"></param>
+        /// <param name="first_id_oper"></param>
+        /// <param name="way"></param>
+        /// <returns></returns>
         public bool changeVagNumsWayOn(int new_count, int first_id_oper, Way way)
         {
+            //string query = string.Format("update VAGON_OPERATIONS set num_vag_on_way = num_vag_on_way + @new_count where id_oper < @first_id_oper " +
+            //    "and id_way = @id_way and is_present = 1");
+            //TODO: Изменил принцип нумерации вагонов на пути куда переставили вагоны после маневра
             string query = string.Format("update VAGON_OPERATIONS set num_vag_on_way = num_vag_on_way + @new_count where id_oper < @first_id_oper " +
                 "and id_way = @id_way and is_present = 1");
             SqlParameter[] sqlParameters = new SqlParameter[3];
@@ -64,7 +73,12 @@ namespace RailwayCL
             sqlParameters[2] = new SqlParameter("@id_way", way.ID);
             return Conn.executeNonQueryCommand(query, sqlParameters);
         }
-
+        /// <summary>
+        /// изменить нумерацию вагонов на пути с которого хзабрали вагоны
+        /// </summary>
+        /// <param name="num_vag_on_way"></param>
+        /// <param name="id_oper"></param>
+        /// <returns></returns>
         public bool changeVagNumsWayFrom(int num_vag_on_way, int id_oper) 
         {
             string query = string.Format("update VAGON_OPERATIONS set num_vag_on_way=@num_vag_on_way " +
