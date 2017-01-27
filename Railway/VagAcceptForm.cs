@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Reflection;
 using RailwayCL;
+using EFRailCars.Helpers;
 
 namespace RailwayUI
 {

@@ -8,10 +8,11 @@ using Excel = Microsoft.Office.Interop.Excel;
 using log4net;
 //using log4net.Config;
 using RailwayCL;
+using EFRailCars.Helpers;
 
 namespace RailwayCL
 {
-    public enum Side { Empty = -1, Even = 0, Odd = 1 } // Четная, Нечетная
+    //public enum Side { Empty = -1, Even = 0, Odd = 1 } // Четная, Нечетная
 
     public class MainPresenter
     {

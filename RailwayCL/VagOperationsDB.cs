@@ -5,11 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Data;
+using EFRailCars.Entities;
+using EFRailCars.Railcars;
 
 namespace RailwayCL
 {
     public class VagOperationsDB : DB
     {
+       
         /// <summary>
         /// Параметры для добавления информации по вагонам
         /// </summary>
@@ -65,6 +68,18 @@ namespace RailwayCL
             //string query = string.Format("update VAGON_OPERATIONS set num_vag_on_way = num_vag_on_way + @new_count where id_oper < @first_id_oper " +
             //    "and id_way = @id_way and is_present = 1");
             //TODO: Изменил принцип нумерации вагонов на пути куда переставили вагоны после маневра
+            // Получим вагоны по которым нужно изменить нумерацию
+            //bool result = true;
+            //List<VAGON_OPERATIONS> list_vag = rc_vo.GetVagonsOperations().Where(o=>o.id_oper < first_id_oper & o.id_way == way.ID & o.is_present==1).OrderBy(o=>o.num_vag_on_way).ToList();
+            //int num = new_count+1;
+            //foreach (VAGON_OPERATIONS wag in list_vag) 
+            //{
+            //    wag.num_vag_on_way = num;
+            //    num++;
+            //    int res = rc_vo.SaveVagonsOperations(wag);
+            //    if (res < 0) result = false;
+            //}
+            //return result;
             string query = string.Format("update VAGON_OPERATIONS set num_vag_on_way = num_vag_on_way + @new_count where id_oper < @first_id_oper " +
                 "and id_way = @id_way and is_present = 1");
             SqlParameter[] sqlParameters = new SqlParameter[3];
@@ -319,5 +334,6 @@ namespace RailwayCL
             sqlParameters[0] = new SqlParameter("@id_oper", id_oper);
             return Conn.executeNonQueryCommand(query, sqlParameters);
         }
+
     }
 }

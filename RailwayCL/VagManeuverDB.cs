@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Data;
 using System.ComponentModel;
+using EFRailCars.Helpers;
 
 namespace RailwayCL
 {
@@ -176,5 +177,6 @@ namespace RailwayCL
         //        tuple = new Tuple<int, int>(Int32.Parse(table.Rows[0]["id_way"].ToString()), Int32.Parse(table.Rows[0]["num_vag_on_way"].ToString()));
         //    return tuple;
         //}
+
     }
 }

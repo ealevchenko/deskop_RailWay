@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Drawing;
 using log4net;
 using log4net.Config;
+using EFRailCars.Helpers;
 
 namespace RailwayCL
 {
@@ -19,6 +20,8 @@ namespace RailwayCL
         WayDB wayDB = new WayDB();
         VagManeuverDB vagManeuverDB = new VagManeuverDB();
 
+        protected Maneuvers maneuvers = new Maneuvers();
+
         private static readonly ILog log = LogManager.GetLogger(typeof(VagManeuverPresenter));
 
         public VagManeuverPresenter(IMainView main, IVagManeuverView view)
@@ -27,7 +30,9 @@ namespace RailwayCL
             this.main = main;
             this.mainPresenter = new MainPresenter(main);
         }
-
+        /// <summary>
+        ///  Основная загрузка данных
+        /// </summary>
         public void loadVagManeuverTab()
         {
             try
@@ -52,7 +57,9 @@ namespace RailwayCL
                 main.showErrorMessage(ex.Message);
             }
         }
-
+        /// <summary>
+        /// Загрузить список локомотивов
+        /// </summary>
         public void loadLocomotives()
         {
             List<Locomotive> list;
@@ -226,6 +233,11 @@ namespace RailwayCL
                 if (main.numSide == view.selectedSide)
                     view.bindVagOnManToSource(listOnMan.OrderBy(x => x.num_vag_on_way).ToList());
                 else view.bindVagOnManToSource(listOnMan.OrderByDescending(x => x.num_vag_on_way).ToList());
+                //TODO: Включить если надо сортировать как указано руками (отключить проверку правила)
+                //List<VagManeuver> listOnMan = view.listVagOnMan;
+                //if (main.numSide == view.selectedSide)
+                //    view.bindVagOnManToSource(listOnMan.OrderBy(x => x.Lock_order).ToList());
+                //else view.bindVagOnManToSource(listOnMan.OrderByDescending(x => x.Lock_order).ToList());
             }
             catch (Exception ex)
             {
@@ -286,44 +298,49 @@ namespace RailwayCL
                         return;
                     }
                 }
+
+
                 int locomNum = 0;
                 if (view.selectedLocom != null) locomNum = view.selectedLocom.Num;
-                log.Info("Начало маневра с пути  " + view.selectedWayFrom.NumName + ", кол-во вагонов: " + view.selectedWayFrom.Vag_amount.ToString() +
-                    " на путь " + view.selectedWayTo.NumName + ", кол-во вагонов: " + view.selectedWayTo.Vag_amount + ". Вагонов на маневре: " + view.listVagOnMan.Count +
-                    ". Горловина маневра: " + view.selectedSide.ToString() + ". Локомотив: " + locomNum);
-                foreach (VagManeuver item in view.listVagForMan)
-                {
-                    log.Info("Вагон " + item.num_vag + " до маневра имеет № на пути: " + item.num_vag_on_way);
-                }
-                //BeginTransaction
-                foreach (VagManeuver item in view.listVagOnMan)
-                {
-                    log.Info("Вагон на маневре №" + item.num_vag + " до маневра имеет № на пути: " + item.num_vag_on_way);
-                    mainPresenter.changeConditionWayOn(item, view.selectedWayTo);
-                    mainPresenter.changeConditionWayAfter(item, view.selectedWayFrom);
+                //TODO: Переделать маневры
+                int res = maneuvers.ManeuverCars(view.selectedWayFrom.ID, view.selectedSide);
 
-                    if (main.numSide == view.selectedSide)
-                        item.num_vag_on_way = view.listVagOnMan.IndexOf(item) + 1;
-                    else item.num_vag_on_way = view.selectedWayTo.Vag_amount + view.listVagOnMan.Count - view.listVagOnMan.IndexOf(item);
-                    int ins_result = vagManeuverDB.execManeuver(item, view.selectedWayTo);
-                    if (ins_result != -1)
-                    {
-                        item.id_oper = ins_result;
-                        log.Info("По вагону " + item.num_vag + " маневр выполнен.");
-                    }
-                }
-                //Log(DateTime.Now.ToString() + " Maneuver added to DB" + "\r\n");
+                //log.Info("Начало маневра с пути  " + view.selectedWayFrom.NumName + ", кол-во вагонов: " + view.selectedWayFrom.Vag_amount.ToString() +
+                //    " на путь " + view.selectedWayTo.NumName + ", кол-во вагонов: " + view.selectedWayTo.Vag_amount + ". Вагонов на маневре: " + view.listVagOnMan.Count +
+                //    ". Горловина маневра: " + view.selectedSide.ToString() + ". Локомотив: " + locomNum);
+                //foreach (VagManeuver item in view.listVagForMan)
+                //{
+                //    log.Info("Вагон " + item.num_vag + " до маневра имеет № на пути: " + item.num_vag_on_way);
+                //}
+                ////BeginTransaction
+                //foreach (VagManeuver item in view.listVagOnMan)
+                //{
+                //    log.Info("Вагон на маневре №" + item.num_vag + " до маневра имеет № на пути: " + item.num_vag_on_way);
+                //    mainPresenter.changeConditionWayOn(item, view.selectedWayTo);
+                //    mainPresenter.changeConditionWayAfter(item, view.selectedWayFrom);
 
-                if (main.numSide == view.selectedSide)
-                {
-                    // изменить нумерацию вагонов на пути назначения
-                    vagManeuverDB.changeVagNumsWayOn(view.listVagOnMan.Count, view.listVagOnMan[0].id_oper, view.selectedWayTo);
-                    log.Info("Изменение нумерации вагонов на пути назначения. First vagon id_oper=" + view.listVagOnMan[0].id_oper);
-                }
+                //    if (main.numSide == view.selectedSide)
+                //        item.num_vag_on_way = view.listVagOnMan.IndexOf(item) + 1;
+                //    else item.num_vag_on_way = view.selectedWayTo.Vag_amount + view.listVagOnMan.Count - view.listVagOnMan.IndexOf(item);
+                //    int ins_result = vagManeuverDB.execManeuver(item, view.selectedWayTo);
+                //    if (ins_result != -1)
+                //    {
+                //        item.id_oper = ins_result;
+                //        log.Info("По вагону " + item.num_vag + " маневр выполнен.");
+                //    }
+                //}
+                ////Log(DateTime.Now.ToString() + " Maneuver added to DB" + "\r\n");
 
-                ManChangeVagNumsWayFrom(); // изменить нумерацию вагонов на пути изъятия
+                //if (main.numSide == view.selectedSide)
+                //{
+                //    // изменить нумерацию вагонов на пути назначения
+                //    vagManeuverDB.changeVagNumsWayOn(view.listVagOnMan.Count, view.listVagOnMan[0].id_oper, view.selectedWayTo);
+                //    log.Info("Изменение нумерации вагонов на пути назначения. First vagon id_oper=" + view.listVagOnMan[0].id_oper);
+                //}
 
-                changeVagAmountOnWaysAfterManeuver(); //  изменить кол-во вагонов на путях после маневра
+                //ManChangeVagNumsWayFrom(); // изменить нумерацию вагонов на пути изъятия - убрал коверкало номера если копировали на тотже путь
+
+                //changeVagAmountOnWaysAfterManeuver(); //  изменить кол-во вагонов на путях после маневра
 
                 //CommitTransaction / Rollback
 
@@ -331,7 +348,13 @@ namespace RailwayCL
                 view.clearWaysOnSelection();
                 view.clearSide(SideUtils.GetInstance().CbNonSelected);
                 view.clearLocom(LocomotiveUtils.GetInstance().CbNonSelected);
+                loadWays();             
+                //loadVagOnMan();
+                //loadVagForMan();
+
                 loadVagForMan();
+                loadVagOnMan(); // загрузить вагоны на маневре (снятые с пути) 
+
             }
             catch (Exception ex)
             {

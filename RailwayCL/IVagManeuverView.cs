@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using EFRailCars.Helpers;
 
 namespace RailwayCL
 {
@@ -76,8 +77,8 @@ namespace RailwayCL
 
         // -- вагоны
         List<VagManeuver> listVagForMan { get; }
-        List<VagManeuver> listVagOnMan { get; }
-        List<VagManeuver> getRemainedVagForMan();
+        List<VagManeuver> listVagOnMan { get; }   // Получить список вагонов в окне перенести
+        List<VagManeuver> getRemainedVagForMan(); // Получить список вагонов в окне вагоны на пути
         int selVagForManCount { get; } // кол-во выделенных вагонов для маневра
         int selVagOnManCount { get; } // кол-во выделенных вагонов на маневре
         //int vagForManCount { get; } // кол-во вагонов для маневров ///
