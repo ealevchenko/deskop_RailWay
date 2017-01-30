@@ -31,7 +31,9 @@ namespace RailwayCL
             this.view = view;
             this.mainPresenter = new MainPresenter(main);
         }
-
+        /// <summary>
+        /// Загрузка панели прибытие вагонов
+        /// </summary>
         public void loadVagWaitAdmissTab()
         {
             try
@@ -121,7 +123,9 @@ namespace RailwayCL
                 main.showErrorMessage(ex.Message);
             }
         }
-
+        /// <summary>
+        /// Выбран вагон для зачисления
+        /// </summary>
         public void onVagSelect()
         {
             try
@@ -170,7 +174,7 @@ namespace RailwayCL
                 main.showErrorMessage(ex.Message);
             }
         }
-
+        // Убрать выделеный вагон
         public void cancelAllToAdm()
         {
             //view.selectAllVagToAdm();
@@ -190,7 +194,9 @@ namespace RailwayCL
             }
             view.clearVagForAdmSel();
         }
-
+        /// <summary>
+        /// Принять поезд целиком
+        /// </summary>
         public void performAdmissTrain()
         {
             try
@@ -208,7 +214,7 @@ namespace RailwayCL
                     List<VagWaitAdmiss> list = view.listWaitAdmiss;
 
                     bool leftVagOnGf = false;
-
+                    // Оставить вагон на вагонаопрокиде
                     if (isGF)
                     {
                         if (list.Count > 1 && main.showQuestMessage("Оставить один вагон на опрокиде?"))
@@ -286,7 +292,9 @@ namespace RailwayCL
                 main.showErrorMessage(ex.Message);
             }
         }
-
+        /// <summary>
+        /// Принять партию вагонов
+        /// </summary>
         public void performAdmissVagPart()
         {
             try
@@ -379,7 +387,9 @@ namespace RailwayCL
                 main.showErrorMessage(ex.Message);
             }
         }
-
+        /// <summary>
+        /// Выбран флажок роспуск
+        /// </summary>
         public void onRospCheckChanged()
         {
             view.rospCheckChanged();
@@ -498,7 +508,9 @@ namespace RailwayCL
                 main.showErrorMessage(ex.Message);
             }
         }
-
+        /// <summary>
+        /// Очистить поле с количеством выделенных вагонов
+        /// </summary>
         public void onVagToAdmListChanged()
         {
             main.setFieldWithSelVagAmount(view.listToAdmiss().Count.ToString());
@@ -700,7 +712,9 @@ namespace RailwayCL
                 vagWaitAdmissDB.deleteVagOperations(item.id_oper);
             }
         }
-
+        /// <summary>
+        /// Убрать цвет выделенного вагона
+        /// </summary>
         private void clearYellowSelectionMultipleVagons()
         {
             for (int i = 0; i <= view.listWaitAdmiss.Count - 1; i++)
@@ -708,7 +722,9 @@ namespace RailwayCL
                 view.setVagColor(i, Color.Empty);
             }
         }
-
+        /// <summary>
+        /// ?? Растановка в правильном порядке
+        /// </summary>
         private void placeInRightOrder()
         {
             try
@@ -751,7 +767,11 @@ namespace RailwayCL
                 //return new Station();
             }
         }
-
+        /// <summary>
+        /// Получить перечень вагонов (опрокид, цех, )
+        /// </summary>
+        /// <param name="isGf"></param>
+        /// <param name="isShop"></param>
         private void loadVagWaitAdmiss(bool isGf, bool isShop)
         {
             Train train = view.getSelTrain(isGf, isShop);
@@ -762,7 +782,9 @@ namespace RailwayCL
             }
             else view.bindVagWaitAdmissToSource(new List<VagWaitAdmiss>());
         }
-
+        /// <summary>
+        /// Установка размеров видимости гаражи опрокиды, цеха
+        /// </summary>
         private void showHideGrFrAndShops()
         {
             view.showHideTrainsGfShops(view.hasGfVag || view.hasShopVag, view.hasGfVag, view.hasShopVag);
@@ -786,7 +808,10 @@ namespace RailwayCL
         {
             vagWaitAdmissDB.getLoadingData(vag, shop, dtFromStat);
         }
-
+        /// <summary>
+        /// Показать поле состояние вагона
+        /// </summary>
+        /// <returns></returns>
         private string getFirstVagCondName()
         {
             string condName = "";

@@ -277,14 +277,6 @@ namespace RailwayCL
         /// </summary>
         public void performManeuver()
         {
-    //        Log("\r\n" + DateTime.Now.ToString() + " Before maneuver. bsWayFrom: " + ((Way)ManBsWayFrom.List[dgvWayFrom.SelectedRows[0].Index]).Vag_amount.ToString() +
-    //", DGVwayFrom: " + dgvWayFrom.SelectedRows[0].Cells[2].Value.ToString() + "\r\n");
-    //        Log(DateTime.Now.ToString() + " Before maneuver. bsWayTo: " + ((Way)ManBsWayTo.List[dgvWayTo.SelectedRows[0].Index]).Vag_amount.ToString() +
-    //            ", DGVwayTo: " + dgvWayTo.SelectedRows[0].Cells[2].Value.ToString() + "\r\n");
-    //        Log(DateTime.Now.ToString() + " Before maneuver. bs2.Count: " + ManBs2.Count.ToString() + "\r\n");
-    //        Log(DateTime.Now.ToString() + " Before maneuver. " + cbLocom.Text + "\r\n");
-    //        Log(DateTime.Now.ToString() + " Before maneuver. " + ManCbSide.Text + "\r\n");
-    //        Log(DateTime.Now.ToString() + " Number of the first Vag on Maneuver: " + dgvOnMan.Rows[0].Cells[1].Value.ToString() + "\r\n");
             try
             {
                 // проверка на выбор горловины
@@ -316,8 +308,12 @@ namespace RailwayCL
                 int locomNum = 0;
                 if (view.selectedLocom != null) locomNum = view.selectedLocom.Num;
                 //TODO: Переделать маневры
+                main.OpenProces();
+                view.enablePerform = false;
                 int res = maneuvers.ManeuverCars(view.selectedWayFrom.ID, main.numSide);
+                view.enablePerform = true;
 
+                //TODO: Удалил переделал маневры 
                 //log.Info("Начало маневра с пути  " + view.selectedWayFrom.NumName + ", кол-во вагонов: " + view.selectedWayFrom.Vag_amount.ToString() +
                 //    " на путь " + view.selectedWayTo.NumName + ", кол-во вагонов: " + view.selectedWayTo.Vag_amount + ". Вагонов на маневре: " + view.listVagOnMan.Count +
                 //    ". Горловина маневра: " + view.selectedSide.ToString() + ". Локомотив: " + locomNum);
@@ -362,15 +358,14 @@ namespace RailwayCL
                 view.clearSide(SideUtils.GetInstance().CbNonSelected);
                 view.clearLocom(LocomotiveUtils.GetInstance().CbNonSelected);
                 loadWays();             
-                //loadVagOnMan();
-                //loadVagForMan();
-
                 loadVagForMan();
                 loadVagOnMan(); // загрузить вагоны на маневре (снятые с пути) 
+                main.CloseProces();
 
             }
             catch (Exception ex)
             {
+                main.CloseProces();
                 main.showErrorMessage(ex.Message);
             }
         }

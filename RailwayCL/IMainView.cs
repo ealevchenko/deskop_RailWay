@@ -9,6 +9,8 @@ namespace RailwayCL
 {
     public interface IMainView
     {
+        void OpenProces();
+        void CloseProces();
         int wayIdxToSelect { get; set; } // переменная для хранения выбранного пути (для автоматич. выбора при переключ. на др. вкладку
         Side numSide { get; } // выбранная горловина нумерации вагонов
         Station selectedStation { get; } // выбранная станция

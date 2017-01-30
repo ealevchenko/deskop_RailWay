@@ -17,6 +17,7 @@ using log4net;
 using log4net.Config;
 using RailwayCL;
 using EFRailCars.Helpers;
+using System.Threading;
 
 namespace RailwayUI
 {
@@ -33,6 +34,8 @@ namespace RailwayUI
         VagOperationsUtils vagOperationsUtils = new VagOperationsUtils();
 
         VagAcceptForm vagAcceptForm;
+        fStatus StatusForm;
+
         fTransit transitForm;
         fRepVagHist repVagHist;
         fRepPeriod repPeriod;
@@ -47,6 +50,17 @@ namespace RailwayUI
 
         private static readonly ILog log = LogManager.GetLogger(typeof(MainForm));
         // IMainView
+
+
+        void IMainView.OpenProces()
+        {
+            Splasher<fStatus>.Show();            
+        }
+
+        void IMainView.CloseProces()
+        {
+            Splasher<fStatus>.Close();
+        }
 
         int IMainView.wayIdxToSelect
         {
@@ -404,6 +418,11 @@ namespace RailwayUI
 
 
         // IVagManeuverView
+        bool IVagManeuverView.enablePerform
+        {
+            get { return bPerform.Enabled; }
+            set { bPerform.Enabled = value; }
+        }
 
         VagManeuverUtils vagManeuverUtils = new VagManeuverUtils();
 
@@ -2139,7 +2158,7 @@ namespace RailwayUI
         private void оПрограммеToolStripMenuItem_Click(object sender, EventArgs e)
         {
             String openPDFFile = @"guide.pdf";
-            System.IO.File.WriteAllBytes(openPDFFile, global::Railway.Properties.Resources.guide);
+            System.IO.File.WriteAllBytes(openPDFFile, global::RailwayUI.Properties.Resources.guide);
             System.Diagnostics.Process.Start(openPDFFile);   
         }
 
