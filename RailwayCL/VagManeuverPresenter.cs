@@ -74,11 +74,14 @@ namespace RailwayCL
                 main.showErrorMessage(ex.Message);
             }
         }
-
+        /// <summary>
+        /// Выбран новый путь
+        /// </summary>
         public void onWayFromSelect()
         {
             try
             {
+                maneuvers.CancelManeuverCarsOfSatation(main.selectedStation.ID); // Удалить все выбранные вагоны для маневра 
                 loadVagForMan();
                 view.clearWaysOnSelection();
                 view.clearSide(SideUtils.GetInstance().CbNonSelected);
@@ -99,7 +102,9 @@ namespace RailwayCL
             }
             catch (ArgumentOutOfRangeException) { }
         }
-
+        /// <summary>
+        /// Выбран вагон для переноса !
+        /// </summary>
         public void onVagForManSelect()
         {
             try
@@ -145,12 +150,15 @@ namespace RailwayCL
                 main.showErrorMessage(ex.Message);
             }
         }
-
+        /// <summary>
+        /// Отменить выбрыные маневры
+        /// </summary>
         public void cancelManeuver()
         {
             try
             {
-                if (vagManeuverDB.cancelManeuver(view.selectedWayFrom))
+                //if (vagManeuverDB.cancelManeuver(view.selectedWayFrom))
+                if (maneuvers.CancelManeuverCars(view.selectedWayFrom.ID)>0)
                 {
                     view.clearColorAndDtFromWayMultipleVag();
 
@@ -175,7 +183,8 @@ namespace RailwayCL
                 VagManeuver vagon = view.firstSelVagOnMan;
                 for (int i = 0; i <= srCount - 1; i++)
                 {
-                    if (vagManeuverDB.cancelVagOnMan(vagon.id_oper))
+                    //if (vagManeuverDB.cancelVagOnMan(vagon.id_oper))
+                    if (maneuvers.CancelManeuverCar(vagon.id_oper) > 0)
                     {
                         // убрать выделение цветом
                         view.setVagForManColor(vagon.num_vag_on_way - 1, Color.Empty);
@@ -224,7 +233,9 @@ namespace RailwayCL
                 main.showErrorMessage(ex.Message);
             }
         }
-
+        /// <summary>
+        /// Выбор стороны с которой будет осуществлятся маневр
+        /// </summary>
         public void ManPlaceInRightOrder()
         {
             try
@@ -244,7 +255,9 @@ namespace RailwayCL
                 main.showErrorMessage(ex.Message);
             }
         }
-
+        /// <summary>
+        /// Добавить вагоны для маневра
+        /// </summary>
         public void addListOnManeuver()
         {
             try
@@ -303,7 +316,7 @@ namespace RailwayCL
                 int locomNum = 0;
                 if (view.selectedLocom != null) locomNum = view.selectedLocom.Num;
                 //TODO: Переделать маневры
-                int res = maneuvers.ManeuverCars(view.selectedWayFrom.ID, view.selectedSide);
+                int res = maneuvers.ManeuverCars(view.selectedWayFrom.ID, main.numSide);
 
                 //log.Info("Начало маневра с пути  " + view.selectedWayFrom.NumName + ", кол-во вагонов: " + view.selectedWayFrom.Vag_amount.ToString() +
                 //    " на путь " + view.selectedWayTo.NumName + ", кол-во вагонов: " + view.selectedWayTo.Vag_amount + ". Вагонов на маневре: " + view.listVagOnMan.Count +
@@ -361,7 +374,9 @@ namespace RailwayCL
                 main.showErrorMessage(ex.Message);
             }
         }
-
+        /// <summary>
+        /// Вывести надпись количество выделенных вагонов
+        /// </summary>
         public void onVagOnManListChanged()
         {
             try
@@ -395,14 +410,18 @@ namespace RailwayCL
             else main.showWarningMessage("Вагон не найден.");
         }
 
-
+        /// <summary>
+        /// Загрузка списка путей
+        /// </summary>
         private List<Way> getWays(Station station, bool rospusk)
         {
             List<Way> list = wayDB.getWays(station, rospusk);
             if (list.Count == 0) list.Add(new Way(-1, station, "0", "-без пути-"));
             return list;
         }
-
+        /// <summary>
+        /// Загрузка списка путей в десктоп
+        /// </summary>
         private void loadWays()
         {
             List<Way> list = getWays(main.selectedStation, false);
@@ -413,13 +432,17 @@ namespace RailwayCL
             view.clearWaysOn();
             view.bindWaysOnToSource(list);
         }
-
+        /// <summary>
+        /// Загрузка вагонов установленных на пути 
+        /// </summary>
         private void loadVagForMan()
         {
             view.bindVagForManToSource(vagManeuverDB.getVagons(view.selectedWayFrom, view.selectedSide));
             view.clearVagForManSelection();
         }
-
+        /// <summary>
+        /// Загрузка вагонов для определенных маневров
+        /// </summary>
         private void loadVagOnMan() 
         {
             List<VagManeuver> listOnMan = new List<VagManeuver>();
@@ -486,7 +509,8 @@ namespace RailwayCL
                         view.removeFromVagOnMan(vagon);
                         view.setVagForManColor(i, Color.Empty);
                         vagon.dt_from_way = null;
-                        vagManeuverDB.cancelVagOnMan(vagon.id_oper);
+                        //vagManeuverDB.cancelVagOnMan(vagon.id_oper);
+                        maneuvers.CancelManeuverCar(vagon.id_oper);
                     }
                 }
             //}
@@ -495,7 +519,12 @@ namespace RailwayCL
             //    main.showErrorMessage(ex.Message);
             //}
         }
-
+        /// <summary>
+        /// Добавить вагон в список для маневра !
+        /// </summary>
+        /// <param name="vagManeuver"></param>
+        /// <param name="order"></param>
+        /// <returns></returns>
         private bool addOnManuever(VagManeuver vagManeuver, int order)
         {
             try
@@ -525,7 +554,10 @@ namespace RailwayCL
             vagManeuver.dt_from_way = DateTime.Now;
             //try
             //{
-                return vagManeuverDB.addOnManeuver(vagManeuver);
+
+            int res = maneuvers.AddCancelManeuverCar(vagManeuver.id_oper, vagManeuver.Lock_id_way, vagManeuver.Lock_order, (int)vagManeuver.Lock_side, vagManeuver.Lock_id_locom, vagManeuver.dt_from_way);
+            if (res > 0) { return true; } else return false;
+            //return vagManeuverDB.addOnManeuver(vagManeuver);
             //}
             //catch (Exception ex)
             //{
@@ -533,37 +565,42 @@ namespace RailwayCL
             //    return false;
             //}
         }
+        //TODO: Удалил переделал маневры
+        ///// <summary>
+        ///// Изменить нумерацию вагонов на пути изъятия
+        ///// </summary>
+        //private void ManChangeVagNumsWayFrom()
+        //{
+        //    List<VagManeuver> remainedVagons = view.getRemainedVagForMan();
+        //    foreach (VagManeuver item in remainedVagons)
+        //    {
+        //        vagManeuverDB.changeVagNumsWayFrom(remainedVagons.IndexOf(item) + 1, item.id_oper);
+        //        log.Info("Вагон " + item.num_vag + ", remainedVagons.IndexOf(item)=" + remainedVagons.IndexOf(item) + ", item.id_oper=" + item.id_oper);
+        //    }
+        //}
+
+        //TODO: Удалил переделал маневры
+        //private void changeVagAmountOnWaysAfterManeuver()
+        //{
+        //    view.selectedWayTo.Vag_amount = view.selectedWayTo.Vag_amount + view.listVagOnMan.Count;
+
+        //    view.selectedWayFrom.Vag_amount = view.selectedWayFrom.Vag_amount - view.listVagOnMan.Count;
+
+
+        //    //Log(DateTime.Now.ToString() + " After. bsWayTo: " + ((Way)ManBsWayTo.List[dgvWayTo.SelectedRows[0].Index]).Vag_amount.ToString() +
+        //    //    ", After. bsWayFrom: " + ((Way)ManBsWayFrom.List[dgvWayFrom.SelectedRows[0].Index]).Vag_amount.ToString() + "\r\n");
+
+        //    view.refreshWaysTables();
+        //    log.Info("Кол-во вагонов на пути_С после маневра: " + view.selectedWayFrom.Vag_amount +
+        //            ". Кол-во вагонов на пути_На после маневра: " + view.selectedWayTo.Vag_amount);
+        //    //Log(DateTime.Now.ToString() + " Refresh made. bsWayTo: " + ((Way)ManBsWayTo.List[dgvWayTo.SelectedRows[0].Index]).Vag_amount.ToString() +
+        //    //    ", bsWayFrom: " + ((Way)ManBsWayFrom.List[dgvWayFrom.SelectedRows[0].Index]).Vag_amount.ToString() + "\r\n");
+        //    //Log(DateTime.Now.ToString() + " Refresh made. DGVwayFrom: " + dgvWayFrom.SelectedRows[0].Cells[2].Value.ToString() + "\r\n");
+        //}
         /// <summary>
-        /// Изменить нумерацию вагонов на пути изъятия
+        /// Определение сотояния вагона
         /// </summary>
-        private void ManChangeVagNumsWayFrom()
-        {
-            List<VagManeuver> remainedVagons = view.getRemainedVagForMan();
-            foreach (VagManeuver item in remainedVagons)
-            {
-                vagManeuverDB.changeVagNumsWayFrom(remainedVagons.IndexOf(item) + 1, item.id_oper);
-                log.Info("Вагон " + item.num_vag + ", remainedVagons.IndexOf(item)=" + remainedVagons.IndexOf(item) + ", item.id_oper=" + item.id_oper);
-            }
-        }
-
-        private void changeVagAmountOnWaysAfterManeuver()
-        {
-            view.selectedWayTo.Vag_amount = view.selectedWayTo.Vag_amount + view.listVagOnMan.Count;
-
-            view.selectedWayFrom.Vag_amount = view.selectedWayFrom.Vag_amount - view.listVagOnMan.Count;
-
-
-            //Log(DateTime.Now.ToString() + " After. bsWayTo: " + ((Way)ManBsWayTo.List[dgvWayTo.SelectedRows[0].Index]).Vag_amount.ToString() +
-            //    ", After. bsWayFrom: " + ((Way)ManBsWayFrom.List[dgvWayFrom.SelectedRows[0].Index]).Vag_amount.ToString() + "\r\n");
-
-            view.refreshWaysTables();
-            log.Info("Кол-во вагонов на пути_С после маневра: " + view.selectedWayFrom.Vag_amount +
-                    ". Кол-во вагонов на пути_На после маневра: " + view.selectedWayTo.Vag_amount);
-            //Log(DateTime.Now.ToString() + " Refresh made. bsWayTo: " + ((Way)ManBsWayTo.List[dgvWayTo.SelectedRows[0].Index]).Vag_amount.ToString() +
-            //    ", bsWayFrom: " + ((Way)ManBsWayFrom.List[dgvWayFrom.SelectedRows[0].Index]).Vag_amount.ToString() + "\r\n");
-            //Log(DateTime.Now.ToString() + " Refresh made. DGVwayFrom: " + dgvWayFrom.SelectedRows[0].Cells[2].Value.ToString() + "\r\n");
-        }
-
+        /// <returns></returns>
         private string getFirstVagCondName()
         {
             string condName = "";

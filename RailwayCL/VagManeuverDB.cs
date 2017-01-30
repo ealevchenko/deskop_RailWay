@@ -88,77 +88,88 @@ namespace RailwayCL
 
             return list;
         }
+        //TODO: Удалил переделал маневры
+        ///// <summary>
+        ///// Сделать изменение в базе данных вагон отмечен для маневра !
+        ///// </summary>
+        ///// <param name="vagOnStat"></param>
+        ///// <returns></returns>
+        //public bool addOnManeuver(VagManeuver vagOnStat)
+        //{
+            
+        //TODO: Удалил переделал маневры            
+        //    string query = string.Format("update VAGON_OPERATIONS set lock_id_way = @id_way, lock_order = @order, " +
+        //    "lock_side = @lock_side, lock_id_locom = @lock_id_locom, dt_from_way = @dt_from_way where id_oper = @id_oper");
+        //    SqlParameter[] sqlParameters = new SqlParameter[6];
+        //    if (vagOnStat.Lock_id_way == -1)
+        //        sqlParameters[0] = new SqlParameter("@id_way", DBNull.Value);
+        //    else sqlParameters[0] = new SqlParameter("@id_way", vagOnStat.Lock_id_way);
+        //    sqlParameters[1] = new SqlParameter("@order", vagOnStat.Lock_order);
+        //    sqlParameters[2] = new SqlParameter("@lock_side", vagOnStat.Lock_side);
+        //    sqlParameters[3] = new SqlParameter("@lock_id_locom", vagOnStat.Lock_id_locom);
+        //    if (vagOnStat.dt_from_way < DateTime.Parse("1900-01-01 00:00") | vagOnStat.dt_from_way==null)
+        //        sqlParameters[4] = new SqlParameter("@dt_from_way", DBNull.Value);
+        //    else sqlParameters[4] = new SqlParameter("@dt_from_way", vagOnStat.dt_from_way);
+        //    sqlParameters[5] = new SqlParameter("@id_oper", vagOnStat.id_oper);
+        //    return Conn.executeNonQueryCommand(query, sqlParameters);
+        //}
+        
+        //TODO: Удалил переделал маневры 
+        //public bool cancelManeuver(Way way)
+        //{
+        //    string query = string.Format("update VAGON_OPERATIONS set lock_id_way = null, lock_order = null," +
+        //        "dt_from_way = null, lock_side = null, lock_id_locom = null where id_way = @id_way and lock_order is not null");
+        //    SqlParameter[] sqlParameters = new SqlParameter[1];
+        //    sqlParameters[0] = new SqlParameter("@id_way", way.ID);
+        //    return Conn.executeNonQueryCommand(query, sqlParameters);
+        //}
 
-        public bool addOnManeuver(VagManeuver vagOnStat)
-        {
-            string query = string.Format("update VAGON_OPERATIONS set lock_id_way = @id_way, lock_order = @order, " +
-            "lock_side = @lock_side, lock_id_locom = @lock_id_locom, dt_from_way = @dt_from_way where id_oper = @id_oper");
-            SqlParameter[] sqlParameters = new SqlParameter[6];
-            if (vagOnStat.Lock_id_way == -1)
-                sqlParameters[0] = new SqlParameter("@id_way", DBNull.Value);
-            else sqlParameters[0] = new SqlParameter("@id_way", vagOnStat.Lock_id_way);
-            sqlParameters[1] = new SqlParameter("@order", vagOnStat.Lock_order);
-            sqlParameters[2] = new SqlParameter("@lock_side", vagOnStat.Lock_side);
-            sqlParameters[3] = new SqlParameter("@lock_id_locom", vagOnStat.Lock_id_locom);
-            if (vagOnStat.dt_from_way < DateTime.Parse("1900-01-01 00:00") | vagOnStat.dt_from_way==null)
-                sqlParameters[4] = new SqlParameter("@dt_from_way", DBNull.Value);
-            else sqlParameters[4] = new SqlParameter("@dt_from_way", vagOnStat.dt_from_way);
-            sqlParameters[5] = new SqlParameter("@id_oper", vagOnStat.id_oper);
-            return Conn.executeNonQueryCommand(query, sqlParameters);
-        }
+        //TODO: Удалил переделал маневры 
+        //public bool cancelVagOnMan(int id_oper)
+        //{
+        //    string query = string.Format("update VAGON_OPERATIONS set lock_id_way = null, lock_order = null,") +
+        //        "dt_from_way = null, lock_side = null, lock_id_locom = null where id_oper = @id_oper";
+        //    SqlParameter[] sqlParameters = new SqlParameter[1];
+        //    sqlParameters[0] = new SqlParameter("@id_oper", id_oper);
+        //    return Conn.executeNonQueryCommand(query, sqlParameters);
+        //}
 
-        public bool cancelManeuver(Way way)
-        {
-            string query = string.Format("update VAGON_OPERATIONS set lock_id_way = null, lock_order = null," +
-                "dt_from_way = null, lock_side = null, lock_id_locom = null where id_way = @id_way and lock_order is not null");
-            SqlParameter[] sqlParameters = new SqlParameter[1];
-            sqlParameters[0] = new SqlParameter("@id_way", way.ID);
-            return Conn.executeNonQueryCommand(query, sqlParameters);
-        }
+        //TODO: Удалил переделал маневры   
+        ///// <summary>
+        ///// Выполнить маневр на станции
+        ///// </summary>
+        ///// <param name="vagManeuver"></param>
+        ///// <param name="way"></param>
+        ///// <returns></returns>
+        //public int execManeuver(VagManeuver vagManeuver, Way way)
+        //{
+        //    string query = string.Format("RailCars.ExecManuever_");
+        //    SqlParameter[] sqlParameters = base.paramsForInsert((VagOperations)vagManeuver, way, 4);
 
-        public bool cancelVagOnMan(int id_oper)
-        {
-            string query = string.Format("update VAGON_OPERATIONS set lock_id_way = null, lock_order = null,") +
-                "dt_from_way = null, lock_side = null, lock_id_locom = null where id_oper = @id_oper";
-            SqlParameter[] sqlParameters = new SqlParameter[1];
-            sqlParameters[0] = new SqlParameter("@id_oper", id_oper);
-            return Conn.executeNonQueryCommand(query, sqlParameters);
-        }
-        /// <summary>
-        /// Выполнить маневр на станции
-        /// </summary>
-        /// <param name="vagManeuver"></param>
-        /// <param name="way"></param>
-        /// <returns></returns>
-        public int execManeuver(VagManeuver vagManeuver, Way way)
-        {
-            string query = string.Format("RailCars.ExecManuever_");
-            SqlParameter[] sqlParameters = base.paramsForInsert((VagOperations)vagManeuver, way, 4);
+        //    int i = sqlParameters.Length;
 
-            int i = sqlParameters.Length;
+        //    //if (way.Bind_cond.Id == -1) 
+        //    //{
+        //    //    if (vagManeuver.cond.Id == -1)
+        //    //        sqlParameters[i - 2] = new SqlParameter("@id_cond2", DBNull.Value);
+        //    //    else sqlParameters[i - 2] = new SqlParameter("@id_cond2", vagManeuver.cond.Id);
+        //    //}
+        //    //else sqlParameters[i - 2] = new SqlParameter("@id_cond2", way.Bind_cond.Id);
+        //    if (vagManeuver.dt_on_stat < DateTime.Parse("1900-01-01 00:00") | vagManeuver.dt_on_stat == null)
+        //        sqlParameters[i - 4] = new SqlParameter("@dt_on_stat", DBNull.Value);
+        //    else sqlParameters[i - 4] = new SqlParameter("@dt_on_stat", vagManeuver.dt_on_stat);
+        //    if (vagManeuver.cond.Id == -1) sqlParameters[i - 3] = new SqlParameter("@id_cond2", DBNull.Value);
+        //    else sqlParameters[i - 3] = new SqlParameter("@id_cond2", vagManeuver.cond.Id);
+        //    if (vagManeuver.Lock_id_locom == -1) sqlParameters[i-2] = new SqlParameter("@id_locom", DBNull.Value);
+        //    else sqlParameters[i-2] = new SqlParameter("@id_locom", vagManeuver.Lock_id_locom);
+        //    sqlParameters[i - 1] = new SqlParameter("@new_identity", SqlDbType.Int);
+        //    sqlParameters[i - 1].Direction = ParameterDirection.Output;
 
-            //if (way.Bind_cond.Id == -1) 
-            //{
-            //    if (vagManeuver.cond.Id == -1)
-            //        sqlParameters[i - 2] = new SqlParameter("@id_cond2", DBNull.Value);
-            //    else sqlParameters[i - 2] = new SqlParameter("@id_cond2", vagManeuver.cond.Id);
-            //}
-            //else sqlParameters[i - 2] = new SqlParameter("@id_cond2", way.Bind_cond.Id);
-            if (vagManeuver.dt_on_stat < DateTime.Parse("1900-01-01 00:00") | vagManeuver.dt_on_stat == null)
-                sqlParameters[i - 4] = new SqlParameter("@dt_on_stat", DBNull.Value);
-            else sqlParameters[i - 4] = new SqlParameter("@dt_on_stat", vagManeuver.dt_on_stat);
-            if (vagManeuver.cond.Id == -1) sqlParameters[i - 3] = new SqlParameter("@id_cond2", DBNull.Value);
-            else sqlParameters[i - 3] = new SqlParameter("@id_cond2", vagManeuver.cond.Id);
-            if (vagManeuver.Lock_id_locom == -1) sqlParameters[i-2] = new SqlParameter("@id_locom", DBNull.Value);
-            else sqlParameters[i-2] = new SqlParameter("@id_locom", vagManeuver.Lock_id_locom);
-            sqlParameters[i - 1] = new SqlParameter("@new_identity", SqlDbType.Int);
-            sqlParameters[i - 1].Direction = ParameterDirection.Output;
-
-            Conn.executeScalarCommand(query, sqlParameters, true);
-            if (sqlParameters[i - 1].Value != null)
-                return int.Parse(sqlParameters[i - 1].Value.ToString());
-            else return -1;
-        }
+        //    Conn.executeScalarCommand(query, sqlParameters, true);
+        //    if (sqlParameters[i - 1].Value != null)
+        //        return int.Parse(sqlParameters[i - 1].Value.ToString());
+        //    else return -1;
+        //}
 
         //public Tuple<int, int> findVagLocation(Station stat, int num)
         //{
