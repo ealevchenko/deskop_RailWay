@@ -15,9 +15,9 @@ namespace RailwayUI
     public class VagOperationsUtils
     {
         private Color NotColor = Color.White;
-        private Color Wagons = Color.FromArgb(150,180,255);
-        private Color Old = Color.LightGray; 
-        private Color MT = Color.LightGreen;  
+        private Color Wagons = Color.LightBlue;
+        private Color Old = Color.LightGray;
+        private Color MT = Color.PaleGreen;  
         private Color SAP_IS = Color.LightYellow;        
         
         public virtual void makeVagDgvColumns(DataGridView dgv)
@@ -70,7 +70,7 @@ namespace RailwayUI
             col = new DataGridViewTextBoxColumn();
             col.HeaderText = "Годность по приб.";
             col.Name = "Годность";
-            col.DataPropertyName = "Godn";
+            col.DataPropertyName = "godn";
             dgv.Columns.Add(col);
 
             // -------------------------
@@ -78,7 +78,7 @@ namespace RailwayUI
             col = new DataGridViewTextBoxColumn();
             col.HeaderText = "Состояние";
             col.Name = "Состояние";
-            col.DataPropertyName = "Cond.Name";
+            col.DataPropertyName = "cond.Name";
             col.Width = 130;
             dgv.Columns.Add(col);
 
@@ -116,6 +116,120 @@ namespace RailwayUI
             col.Width = 130;
             dgv.Columns.Add(col);
 
+
+
+            col = new DataGridViewTextBoxColumn();
+            col.HeaderText = "Станц. отправл. УЗ";
+            col.Name = "Станц. отправл. УЗ";
+            col.DataPropertyName = "Outer_station";
+            col.DefaultCellStyle.BackColor = Old;
+            dgv.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn();
+            col.HeaderText = "Груз по прибыт. на АМКР";
+            col.Name = "Груз по прибыт. на АМКР";
+            col.DataPropertyName = "Gruz_amkr";
+            col.DefaultCellStyle.BackColor = Old;
+            dgv.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn();
+            col.HeaderText = "Вес груза";
+            col.Name = "Вес груза";
+            col.DataPropertyName = "Weight_gruz";
+            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            col.DefaultCellStyle.BackColor = Old;
+            dgv.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn();
+            col.HeaderText = "Цех-получ. груза";
+            col.Name = "Цех-получ. груза";
+            col.DataPropertyName = "CehGruz";
+            col.DefaultCellStyle.BackColor = Old;
+            dgv.Columns.Add(col);
+
+            // --- инф. по письмам -----
+            col = new DataGridViewTextBoxColumn();
+            col.HeaderText = "Дата письма";
+            col.Name = "Дата письма";
+            col.DataPropertyName = "MailDate";
+            dgv.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn();
+            col.HeaderText = "№ письма";
+            col.Name = "№ письма";
+            col.DataPropertyName = "MailNum";
+            dgv.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn();
+            col.HeaderText = "Текст письма";
+            col.Name = "Текст письма";
+            col.DataPropertyName = "MailText";
+            dgv.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn();
+            col.HeaderText = "Станц. указ. в письме";
+            col.Name = "Станц. указ. в письме";
+            col.DataPropertyName = "MailStat";
+            dgv.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn();
+            col.HeaderText = "Собств. указ. в письме";
+            col.Name = "Собств. указ. в письме";
+            col.DataPropertyName = "MailSobstv";
+            dgv.Columns.Add(col);
+
+            // --- отправка на УЗ ------
+
+            col = new DataGridViewTextBoxColumn();
+            col.HeaderText = "Станция назнач.";
+            col.Name = "Станция назнач.";
+            col.DataPropertyName = "Gdstait";
+            col.Width = 200;
+            dgv.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn();
+            col.HeaderText = "Примечан.";
+            col.Name = "Примечан.";
+            col.DataPropertyName = "Note";
+            dgv.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn();
+            col.HeaderText = "Страна назнач.";
+            col.Name = "Страна назнач.";
+            col.DataPropertyName = "Nazn_country";
+            dgv.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn();
+            col.HeaderText = "№ тупика";
+            col.Name = "№ тупика";
+            col.DataPropertyName = "Tupik";
+            dgv.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn();
+            col.HeaderText = "Грузоподъемность";
+            col.Name = "Грузоподъемность";
+            col.DataPropertyName = "GrvuSAP";
+            col.Width = 130;
+            dgv.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn();
+            col.HeaderText = "Грузополучатель";
+            col.Name = "Грузополучатель";
+            col.DataPropertyName = "NgruSAP";
+            col.Width = 130;
+            dgv.Columns.Add(col);
+
+            // --------------------------
+
+            col = new DataGridViewTextBoxColumn();
+            col.HeaderText = "Дата/время постановки на путь";
+            col.DataPropertyName = "DT_on_way";
+            //col.DisplayIndex = dgv.Columns.Count - 1;
+            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            col.Width = 130;
+            dgv.Columns.Add(col);
+
+            // САП
             col = new DataGridViewTextBoxColumn();
             col.HeaderText = "САП (№ накладной)";
             col.Name = "САП (№ накладной)";
@@ -268,117 +382,6 @@ namespace RailwayUI
             col.DefaultCellStyle.BackColor = SAP_IS;
             //col.Width = 130;
             dgv.Columns.Add(col);
-
-            col = new DataGridViewTextBoxColumn();
-            col.HeaderText = "Станц. отправл. УЗ";
-            col.Name = "Станц. отправл. УЗ";
-            col.DataPropertyName = "Outer_station";
-            col.DefaultCellStyle.BackColor = Old;
-            dgv.Columns.Add(col);
-
-            col = new DataGridViewTextBoxColumn();
-            col.HeaderText = "Груз по прибыт. на АМКР";
-            col.Name = "Груз по прибыт. на АМКР";
-            col.DataPropertyName = "Gruz_amkr";
-            col.DefaultCellStyle.BackColor = Old;
-            dgv.Columns.Add(col);
-
-            col = new DataGridViewTextBoxColumn();
-            col.HeaderText = "Вес груза";
-            col.Name = "Вес груза";
-            col.DataPropertyName = "Weight_gruz";
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            col.DefaultCellStyle.BackColor = Old;
-            dgv.Columns.Add(col);
-
-            col = new DataGridViewTextBoxColumn();
-            col.HeaderText = "Цех-получ. груза";
-            col.Name = "Цех-получ. груза";
-            col.DataPropertyName = "CehGruz";
-            col.DefaultCellStyle.BackColor = Old;
-            dgv.Columns.Add(col);
-
-            // --- инф. по письмам -----
-            col = new DataGridViewTextBoxColumn();
-            col.HeaderText = "Дата письма";
-            col.Name = "Дата письма";
-            col.DataPropertyName = "MailDate";
-            dgv.Columns.Add(col);
-
-            col = new DataGridViewTextBoxColumn();
-            col.HeaderText = "№ письма";
-            col.Name = "№ письма";
-            col.DataPropertyName = "MailNum";
-            dgv.Columns.Add(col);
-
-            col = new DataGridViewTextBoxColumn();
-            col.HeaderText = "Текст письма";
-            col.Name = "Текст письма";
-            col.DataPropertyName = "MailText";
-            dgv.Columns.Add(col);
-
-            col = new DataGridViewTextBoxColumn();
-            col.HeaderText = "Станц. указ. в письме";
-            col.Name = "Станц. указ. в письме";
-            col.DataPropertyName = "MailStat";
-            dgv.Columns.Add(col);
-
-            col = new DataGridViewTextBoxColumn();
-            col.HeaderText = "Собств. указ. в письме";
-            col.Name = "Собств. указ. в письме";
-            col.DataPropertyName = "MailSobstv";
-            dgv.Columns.Add(col);
-
-            // --- отправка на УЗ ------
-
-            col = new DataGridViewTextBoxColumn();
-            col.HeaderText = "Станция назнач.";
-            col.Name = "Станция назнач.";
-            col.DataPropertyName = "Gdstait";
-            col.Width = 200;
-            dgv.Columns.Add(col);
-
-            col = new DataGridViewTextBoxColumn();
-            col.HeaderText = "Примечан.";
-            col.Name = "Примечан.";
-            col.DataPropertyName = "Note";
-            dgv.Columns.Add(col);
-
-            col = new DataGridViewTextBoxColumn();
-            col.HeaderText = "Страна назнач.";
-            col.Name = "Страна назнач.";
-            col.DataPropertyName = "Nazn_country";
-            dgv.Columns.Add(col);
-
-            col = new DataGridViewTextBoxColumn();
-            col.HeaderText = "№ тупика";
-            col.Name = "№ тупика";
-            col.DataPropertyName = "Tupik";
-            dgv.Columns.Add(col);
-
-            col = new DataGridViewTextBoxColumn();
-            col.HeaderText = "Грузоподъемность";
-            col.Name = "Грузоподъемность";
-            col.DataPropertyName = "GrvuSAP";
-            col.Width = 130;
-            dgv.Columns.Add(col);
-
-            col = new DataGridViewTextBoxColumn();
-            col.HeaderText = "Грузополучатель";
-            col.Name = "Грузополучатель";
-            col.DataPropertyName = "NgruSAP";
-            col.Width = 130;
-            dgv.Columns.Add(col);
-
-            // --------------------------
-
-            col = new DataGridViewTextBoxColumn();
-            col.HeaderText = "Дата/время постановки на путь";
-            col.DataPropertyName = "DT_on_way";
-            //col.DisplayIndex = dgv.Columns.Count - 1;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            col.Width = 130;
-            dgv.Columns.Add(col);
         }
 
         public void changeColumnsPosition(DataGridView dgv, bool isDepart)
@@ -402,23 +405,23 @@ namespace RailwayUI
                 dgv.Columns["Груз по прибыт. на АМКР"].DisplayIndex = i + 5;
                 dgv.Columns["Вес груза"].DisplayIndex = i + 6;
                 dgv.Columns["Цех-получ. груза"].DisplayIndex = i + 7;
-                dgv.Columns["САП (№ накладной)"].DisplayIndex = i + 8;
-                dgv.Columns["МТ (вес) -> САП (вес по документам)"].DisplayIndex = i + 9;
-                dgv.Columns["САП (номер отвесной)"].DisplayIndex = i + 10;
-                dgv.Columns["САП (дата отвесной)"].DisplayIndex = i + 11;
-                dgv.Columns["САП (вес после перевески)"].DisplayIndex = i + 12;
-                dgv.Columns["САП (время перевески)"].DisplayIndex = i + 13;
-                dgv.Columns["САП (код материала)"].DisplayIndex = i + 14;
-                dgv.Columns["САП (Материал)"].DisplayIndex = i + 15;
-                dgv.Columns["САП (Код станции отправл. УЗ)"].DisplayIndex = i + 16;
-                dgv.Columns["САП (Название станции отправл. УЗ)"].DisplayIndex = i + 17;
-                dgv.Columns["САП (Код цеха)"].DisplayIndex = i + 18;
-                dgv.Columns["САП (Цех получатель груза)"].DisplayIndex = i + 19;
-                dgv.Columns["САП (Код переадр. цеха)"].DisplayIndex = i + 20;
-                dgv.Columns["САП (Цех переадр. груза)"].DisplayIndex = i + 21;
-                dgv.Columns["САП (Разрешение на выгрузку)"].DisplayIndex = i + 22;
-                dgv.Columns["САП (Перенос САП)"].DisplayIndex = i + 22;
-                dgv.Columns["САП (Перенос 10 км)"].DisplayIndex = i + 22;
+                //dgv.Columns["САП (№ накладной)"].DisplayIndex = i + 8;
+                //dgv.Columns["МТ (вес) -> САП (вес по документам)"].DisplayIndex = i + 9;
+                //dgv.Columns["САП (номер отвесной)"].DisplayIndex = i + 10;
+                //dgv.Columns["САП (дата отвесной)"].DisplayIndex = i + 11;
+                //dgv.Columns["САП (вес после перевески)"].DisplayIndex = i + 12;
+                //dgv.Columns["САП (время перевески)"].DisplayIndex = i + 13;
+                //dgv.Columns["САП (код материала)"].DisplayIndex = i + 14;
+                //dgv.Columns["САП (Материал)"].DisplayIndex = i + 15;
+                //dgv.Columns["САП (Код станции отправл. УЗ)"].DisplayIndex = i + 16;
+                //dgv.Columns["САП (Название станции отправл. УЗ)"].DisplayIndex = i + 17;
+                //dgv.Columns["САП (Код цеха)"].DisplayIndex = i + 18;
+                //dgv.Columns["САП (Цех получатель груза)"].DisplayIndex = i + 19;
+                //dgv.Columns["САП (Код переадр. цеха)"].DisplayIndex = i + 20;
+                //dgv.Columns["САП (Цех переадр. груза)"].DisplayIndex = i + 21;
+                //dgv.Columns["САП (Разрешение на выгрузку)"].DisplayIndex = i + 22;
+                //dgv.Columns["САП (Перенос САП)"].DisplayIndex = i + 22;
+                //dgv.Columns["САП (Перенос 10 км)"].DisplayIndex = i + 22;
             }
 
             dgv.Columns["Состояние"].DisplayIndex = dgv.Columns["МТ (Дата/время готовности отправки с УЗ)"].DisplayIndex - 1;

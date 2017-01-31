@@ -10,7 +10,8 @@ namespace RailwayCL
 {
     public interface IVagManeuverView
     {
-        bool enablePerform { get; set; } 
+        bool enablePerform { get; set; }
+        bool visiblePerform { get; set; }
         // работа с таблицами вагонов, интерфейсом
         int dgvForManColumnsCount { get; }
         int dgvOnManColumnsCount { get; }

@@ -37,6 +37,7 @@ namespace RailwayCL
         {
             try
             {
+                view.visiblePerform = true;
                 if (view.dgvForManColumnsCount == 0) view.makeDgvForManColumns();
                 if (view.dgvOnManColumnsCount == 0) view.makeDgvOnManColumns();
 
@@ -308,10 +309,9 @@ namespace RailwayCL
                 int locomNum = 0;
                 if (view.selectedLocom != null) locomNum = view.selectedLocom.Num;
                 //TODO: Переделать маневры
-                main.OpenProces();
-                view.enablePerform = false;
+                view.visiblePerform = false;
                 int res = maneuvers.ManeuverCars(view.selectedWayFrom.ID, main.numSide);
-                view.enablePerform = true;
+                view.visiblePerform = true;
 
                 //TODO: Удалил переделал маневры 
                 //log.Info("Начало маневра с пути  " + view.selectedWayFrom.NumName + ", кол-во вагонов: " + view.selectedWayFrom.Vag_amount.ToString() +
@@ -360,12 +360,12 @@ namespace RailwayCL
                 loadWays();             
                 loadVagForMan();
                 loadVagOnMan(); // загрузить вагоны на маневре (снятые с пути) 
-                main.CloseProces();
+                view.visiblePerform = true;
 
             }
             catch (Exception ex)
             {
-                main.CloseProces();
+                view.visiblePerform = true;
                 main.showErrorMessage(ex.Message);
             }
         }

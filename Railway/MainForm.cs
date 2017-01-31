@@ -34,7 +34,6 @@ namespace RailwayUI
         VagOperationsUtils vagOperationsUtils = new VagOperationsUtils();
 
         VagAcceptForm vagAcceptForm;
-        fStatus StatusForm;
 
         fTransit transitForm;
         fRepVagHist repVagHist;
@@ -50,17 +49,6 @@ namespace RailwayUI
 
         private static readonly ILog log = LogManager.GetLogger(typeof(MainForm));
         // IMainView
-
-
-        void IMainView.OpenProces()
-        {
-            Splasher<fStatus>.Show();            
-        }
-
-        void IMainView.CloseProces()
-        {
-            Splasher<fStatus>.Close();
-        }
 
         int IMainView.wayIdxToSelect
         {
@@ -424,6 +412,15 @@ namespace RailwayUI
             set { bPerform.Enabled = value; }
         }
 
+        bool IVagManeuverView.visiblePerform
+        {
+            get { return bPerform.Visible; }
+            set
+            {
+                bPerform.Visible = value;
+            }
+
+        }
         VagManeuverUtils vagManeuverUtils = new VagManeuverUtils();
 
         int IVagManeuverView.dgvForManColumnsCount
@@ -2739,6 +2736,7 @@ namespace RailwayUI
         {
             get { return chRospusk.Checked; }
         }
+
 
     }
 }
