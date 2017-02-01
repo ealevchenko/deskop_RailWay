@@ -104,9 +104,11 @@ namespace RailwayCL
         private DataTable getVagonsTable(Train train, Station stat)
         {
             string query = "[RailCars].[GetRemoveWagons]";
-            SqlParameter[] sqlParameters = new SqlParameter[2];
+            SqlParameter[] sqlParameters = new SqlParameter[4];
             sqlParameters[0] = new SqlParameter("@idstation", stat.ID);
             sqlParameters[1] = new SqlParameter("@dt", train.DateFromStat);
+            sqlParameters[2] = new SqlParameter("@idstationTo", train.StationTo.ID);
+            sqlParameters[3] = new SqlParameter("@trainnum", train.Num);
             return Conn.executeProc(query, sqlParameters).Tables[0];
         }
         //private DataTable getVagonsTable(Train train, Station stat)
