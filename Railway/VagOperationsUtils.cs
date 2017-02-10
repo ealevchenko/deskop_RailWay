@@ -15,10 +15,10 @@ namespace RailwayUI
     public class VagOperationsUtils
     {
         private Color NotColor = Color.White;
-        private Color Wagons = Color.LightBlue;
+        private Color Wagons = Color.FromArgb(255, 0xf5, 0xf5, 0xf5); //C9E1E8
         private Color Old = Color.LightGray;
-        private Color MT = Color.PaleGreen;  
-        private Color SAP_IS = Color.LightYellow;        
+        private Color MT = Color.FromArgb(255, 0xf5, 0xf5, 0xf5); //Color.PaleGreen; BAD9AE
+        private Color SAP_IS = Color.FromArgb(255, 0xf5, 0xf5, 0xf5); //Color.LightYellow;        
         
         public virtual void makeVagDgvColumns(DataGridView dgv)
         {
