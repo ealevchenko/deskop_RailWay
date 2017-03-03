@@ -61,7 +61,7 @@ namespace RailwayCL
         public string NameShop { get; set; } // название цеха получателя по данным САП
         public string CodeNewShop { get; set; } // код переадресовки цеха получателя по данным САП
         public string NameNewShop { get; set; } // название переадресовки цеха получателя по данным САП
-        public bool PermissionUnload { get; set; } // разрешение на выгрузку по данным САП
+        public string PermissionUnload { get; set; } // разрешение на выгрузку по данным САП
         public bool Step1 { get; set; } // перенесены данные сап по данным САП
         public bool Step2 { get; set; } // перенесены данные по весовым по данным САП
 

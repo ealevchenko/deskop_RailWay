@@ -52,11 +52,11 @@ namespace RailwayUI
             col.DefaultCellStyle.BackColor = Wagons;
             dgv.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.HeaderText = "Страна собств.";
-            col.DataPropertyName = "Own_country";
-            //col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dgv.Columns.Add(col);
+            //col = new DataGridViewTextBoxColumn();
+            //col.HeaderText = "Страна собств.";
+            //col.DataPropertyName = "Own_country";
+            ////col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            //dgv.Columns.Add(col);
 
             col = new DataGridViewTextBoxColumn();
             col.HeaderText = "МТ (Страна)";
@@ -98,6 +98,15 @@ namespace RailwayUI
             dgv.Columns.Add(col);
 
             // --- прибытие с УЗ -------
+
+
+            col = new DataGridViewTextBoxColumn();
+            col.HeaderText = "Цех-получ. груза";
+            col.Name = "Цех-получ. груза";
+            col.DataPropertyName = "ceh_gruz";
+            col.DefaultCellStyle.BackColor = Old;
+            dgv.Columns.Add(col);
+
             col = new DataGridViewTextBoxColumn();
             col.HeaderText = "МТ (Дата/время готовности отправки с УЗ)";
             col.Name = "МТ (Дата/время готовности отправки с УЗ)";
@@ -137,13 +146,6 @@ namespace RailwayUI
             col.Name = "Вес груза";
             col.DataPropertyName = "Weight_gruz";
             col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            col.DefaultCellStyle.BackColor = Old;
-            dgv.Columns.Add(col);
-
-            col = new DataGridViewTextBoxColumn();
-            col.HeaderText = "Цех-получ. груза";
-            col.Name = "Цех-получ. груза";
-            col.DataPropertyName = "CehGruz";
             col.DefaultCellStyle.BackColor = Old;
             dgv.Columns.Add(col);
 
@@ -399,12 +401,13 @@ namespace RailwayUI
             }
             else
             {
-                dgv.Columns["МТ (Дата/время готовности отправки с УЗ)"].DisplayIndex = i + 2;                
-                dgv.Columns["Дата/время захода на АМКР"].DisplayIndex = i + 3;
-                dgv.Columns["Станц. отправл. УЗ"].DisplayIndex = i + 4;
-                dgv.Columns["Груз по прибыт. на АМКР"].DisplayIndex = i + 5;
-                dgv.Columns["Вес груза"].DisplayIndex = i + 6;
-                dgv.Columns["Цех-получ. груза"].DisplayIndex = i + 7;
+                dgv.Columns["Цех-получ. груза"].DisplayIndex = i + 2;                
+                dgv.Columns["МТ (Дата/время готовности отправки с УЗ)"].DisplayIndex = i + 3;                
+                dgv.Columns["Дата/время захода на АМКР"].DisplayIndex = i + 4;
+                dgv.Columns["Станц. отправл. УЗ"].DisplayIndex = i + 5;
+                dgv.Columns["Груз по прибыт. на АМКР"].DisplayIndex = i + 6;
+                dgv.Columns["Вес груза"].DisplayIndex = i + 7;
+
                 //dgv.Columns["САП (№ накладной)"].DisplayIndex = i + 8;
                 //dgv.Columns["МТ (вес) -> САП (вес по документам)"].DisplayIndex = i + 9;
                 //dgv.Columns["САП (номер отвесной)"].DisplayIndex = i + 10;

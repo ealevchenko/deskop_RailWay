@@ -169,7 +169,7 @@ namespace RailwayCL
                     NameShop = row["NameShop"] != DBNull.Value ? row["NameShop"].ToString().Trim() : "",
                     CodeNewShop = row["CodeNewShop"] != DBNull.Value ? row["CodeNewShop"].ToString().Trim() : "",
                     NameNewShop = row["NameNewShop"] != DBNull.Value ? row["NameNewShop"].ToString().Trim() : "",
-                    PermissionUnload = row["PermissionUnload"] != DBNull.Value ? bool.Parse(row["PermissionUnload"].ToString()) : false,
+                    PermissionUnload = row["PermissionUnload"] != DBNull.Value ? bool.Parse(row["PermissionUnload"].ToString()) ? "Разрешено" : "Запрещено" : "Запрещено",
                     Step1 = row["Step1"] != DBNull.Value ? bool.Parse(row["Step1"].ToString()) : false,
                     Step2 = row["Step2"] != DBNull.Value ? bool.Parse(row["Step2"].ToString()) : false,
 
