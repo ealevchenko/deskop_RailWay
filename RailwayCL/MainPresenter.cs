@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using Excel = Microsoft.Office.Interop.Excel;
-using log4net;
+//using log4net;
 //using log4net.Config;
 using RailwayCL;
 using EFRailCars.Helpers;
@@ -18,7 +18,7 @@ namespace RailwayCL
     {
         IMainView view;
 
-        private static readonly ILog log = LogManager.GetLogger(typeof(MainPresenter));
+        //private static readonly ILog log = LogManager.GetLogger(typeof(MainPresenter));
 
         StationDB stationDB = new StationDB();
 

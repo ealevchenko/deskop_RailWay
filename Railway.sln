@@ -15,6 +15,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RailwayCL", "RailwayCL\Rail
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFRailCars", "..\Project RailWay\EFRailCars\EFRailCars.csproj", "{50DE3D96-54B1-4B7D-A24F-6BCB42A3A1D8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServicesStatus", "..\Project RailWay\ServicesStatus\ServicesStatus.csproj", "{B351FC89-89FC-4F4C-8502-E745CFA7FABA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFRWOperations", "..\Project RailWay\EFRWOperations\EFRWOperations.csproj", "{F7553724-E10C-4E04-94E3-511E8CE0A4F5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RWOperations_Desktop", "..\Project RailWay\RWOperations_Desktop\RWOperations_Desktop.csproj", "{7882ADA6-AE6D-48C2-8C8A-DB7AA0E76352}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +39,18 @@ Global
 		{50DE3D96-54B1-4B7D-A24F-6BCB42A3A1D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50DE3D96-54B1-4B7D-A24F-6BCB42A3A1D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50DE3D96-54B1-4B7D-A24F-6BCB42A3A1D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B351FC89-89FC-4F4C-8502-E745CFA7FABA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B351FC89-89FC-4F4C-8502-E745CFA7FABA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B351FC89-89FC-4F4C-8502-E745CFA7FABA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B351FC89-89FC-4F4C-8502-E745CFA7FABA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7553724-E10C-4E04-94E3-511E8CE0A4F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7553724-E10C-4E04-94E3-511E8CE0A4F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7553724-E10C-4E04-94E3-511E8CE0A4F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7553724-E10C-4E04-94E3-511E8CE0A4F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7882ADA6-AE6D-48C2-8C8A-DB7AA0E76352}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7882ADA6-AE6D-48C2-8C8A-DB7AA0E76352}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7882ADA6-AE6D-48C2-8C8A-DB7AA0E76352}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7882ADA6-AE6D-48C2-8C8A-DB7AA0E76352}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

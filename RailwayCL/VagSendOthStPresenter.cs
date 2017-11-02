@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using EFRailCars.Helpers;
+using ServicesStatus;
+using RWOperations.Helpers;
 
 namespace RailwayCL
 {
@@ -21,6 +23,8 @@ namespace RailwayCL
         StationDB stationDB = new StationDB();
         WayDB wayDB = new WayDB();
         VagSendOthStDB vagSendOthStDB = new VagSendOthStDB();
+
+        private RWO_Desktop rwoperation = new RWO_Desktop();
 
         public VagSendOthStPresenter(IMainView main, IVagSendOthStView view)
         {
@@ -313,21 +317,30 @@ namespace RailwayCL
                 {
                     if (!checkVagOrder()) return;
                 }
-
+                string mess_send = String.Format("Пользователь отправил состав со станции {0}, пути {1}, на станцию {2}", main.selectedStation.Name, view.selectedWay.NumName, view.selectedStatAccept != null ? view.selectedStatAccept.Name : view.selectedGF != null ? "Вагоноопрокид : " + view.selectedGF.Name : view.selectedShop!=null ? "Цех:"+view.selectedShop.Name :  "?" );
+                string status = "";
+                //TODO: RW-ОПЕРАЦИИ Включил логирование rw-операций отправки на другие станции
+                rwoperation.DispatchCars(view.listToSend.Select(s => (int)s.num_vag).ToArray(), main.selectedStation.ID, view.selectedWay.ID, (view.selectedStatAccept != null ?  (int?)view.selectedStatAccept.ID : null), 
+                    view.selectedGF != null ? (int?)view.listToSend[0].St_gruz_front : null,
+                    view.selectedShop != null ? (int?)view.listToSend[0].St_shop : null,
+                    new int[] {view.listToSend[0].St_lock_locom1, view.listToSend[0].St_lock_locom2});
                 foreach (VagSendOthSt item in view.listToSend)
                 {
+                    
+
                     if (view.selectedGF != null || view.selectedShop != null)
                     {
                         bool isShop = false;
                         if (view.selectedShop != null) isShop = true;
                         dt_from_stat = item.dt_from_stat;
                         mainPresenter.changeLoadCond(item, isShop);
+
                     }
                     mainPresenter.changeConditionWayAfter(item, view.selectedWay);
-
                     vagSendOthStDB.send(item.id_oper, item.cond.Id, dt_from_stat, DateTime.Now);
+                    status += String.Format("[состав:{0}, №:{1}, дата АМКР:{2}]; ", item.id_sostav, item.num_vag, item.dt_amkr);
                 }
-
+                mess_send.SaveLogEvents(status, service.DesktopRailCars);
                 changeVagNumsWayFrom(); // изменить нумерацию вагонов на пути изъятия
 
                 changeVagAmountOnWayAfterSending(); //  изменить кол-во вагонов на путях после отправки
@@ -446,7 +459,10 @@ namespace RailwayCL
             else main.showWarningMessage("Вагон не найден.");
         }
 
-
+        /// <summary>
+        /// Проверка следования вагонов
+        /// </summary>
+        /// <returns></returns>
         private bool checkVagOrder()
         {
             bool questResult = true;

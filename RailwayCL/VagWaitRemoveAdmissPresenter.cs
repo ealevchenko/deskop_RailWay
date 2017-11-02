@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using ServicesStatus;
 
 namespace RailwayCL
 {
@@ -98,9 +99,16 @@ namespace RailwayCL
                         return;
                     }
                 }
+                string mess_send = String.Format("Пользователь отменил отправку состава со станции {0}, на станцию {1}", main.selectedStation.Name,view.getSelTrain().StationTo.Name);
+                string status = "";
                 vagWaitRemoveAdmissDB.changeNumVagsAfterCancel(wayDB.getWayByIdOper(view.listVagons[0].id_oper), train, list.Cast<VagOperations>().ToList());
                 vagWaitRemoveAdmissDB.cancelTrainSending(view.getSelTrain(), main.selectedStation, list);
+                foreach (VagWaitRemoveAdmiss item in list)
+                {
+                    status += String.Format("[состав:{0}, №:{1}, дата АМКР:{2}]; ", item.id_sostav, item.num_vag, item.dt_amkr);
+                }
                 main.showInfoMessage("Отмена произведена успешно!");
+                mess_send.SaveLogEvents(status, service.DesktopRailCars);
 
                 //удаляем строку поезда
                 if (isAllVag || view.listVagons.Count == view.listToCancel.Count)

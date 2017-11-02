@@ -50,7 +50,7 @@ namespace RailwayCL
         void clearStationsTo(string text);
         void setStationTo(int id_stat);
         // -- ГФ
-        GruzFront selectedGF { get; }
+        GruzFront selectedGF { get; } // вагоноопрокид
         void loadGF(List<GruzFront> list, string cbDisplay, string cbValue, string cbNonSelected);
         void clearGF(string text);
         void deleteGfItems();

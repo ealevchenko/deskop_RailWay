@@ -43,15 +43,22 @@ namespace RailwayCL
         /// <returns></returns>
         private DataTable getVagonsTable(Train train, Station stat, Side side, bool isGF, bool isCeh)
         {
-            string query = "[RailCars].[GetAdmissWagons]";
-            SqlParameter[] sqlParameters = new SqlParameter[6];
-            sqlParameters[0] = new SqlParameter("@idstation", stat.ID);
-            sqlParameters[1] = new SqlParameter("@trainNum", !isGF & !isCeh ? train.Num : -1);
-            sqlParameters[2] = new SqlParameter("@dt", train.DateFromStat);
-            sqlParameters[3] = new SqlParameter("@shop", isCeh ? train.SendingPoint.ID : SqlInt32.Null);
-            sqlParameters[4] = new SqlParameter("@gf", isGF ? train.SendingPoint.ID : SqlInt32.Null);
-            sqlParameters[5] = new SqlParameter("@side", isCeh && stat.ID != 17 ? 1 : 0);
-            return Conn.executeProc(query, sqlParameters).Tables[0];
+            try
+            {
+                string query = "[RailCars].[GetAdmissWagons]";
+                SqlParameter[] sqlParameters = new SqlParameter[6];
+                sqlParameters[0] = new SqlParameter("@idstation", stat.ID);
+                sqlParameters[1] = new SqlParameter("@trainNum", !isGF & !isCeh ? train.Num : -1);
+                sqlParameters[2] = new SqlParameter("@dt", train.DateFromStat);
+                sqlParameters[3] = new SqlParameter("@shop", !isGF & isCeh ? train.SendingPoint.ID : SqlInt32.Null);
+                sqlParameters[4] = new SqlParameter("@gf", isGF ? train.SendingPoint.ID : SqlInt32.Null);
+                sqlParameters[5] = new SqlParameter("@side", isCeh && stat.ID != 17 ? 1 : 0);
+                return Conn.executeProc(query, sqlParameters).Tables[0];
+            }
+            catch (Exception ex)
+            {
+                return new DataTable();
+            }
             //string str = "";
             //if (/*stat.Outer_side == side || */isCeh && stat.ID != 17) str = "desc";
 
@@ -74,13 +81,13 @@ namespace RailwayCL
             //    sqlParameters[0] = new SqlParameter("@dt", train.DateFromStat);
             //}
 
-            //string query = string.Format("select vo.*, o.abr as owner_, "+
+            //string query = string.Format("select vo.*, o.abr as owner_, " +
             //"c.name as country, vc.name as cond, vc2.name as cond2, vc2.id_cond_after, " +
             //"g.name as gruz, g2.name as gruz_amkr, v.num, v.rod, v.st_otpr, s.name as shop, t.name as tupik, gd.name as gdstait, nc.name as nazn_country, " +
             //"p.date_mail, p.n_mail, p.[text], p.nm_stan, p.nm_sobstv " +
-            //"from VAGON_OPERATIONS vo "+
-            //"inner join VAGONS v on vo.id_vagon=v.id_vag "+
-            //"left join OWNERS o on v.id_owner=o.id_owner "+
+            //"from VAGON_OPERATIONS vo " +
+            //"inner join VAGONS v on vo.id_vagon=v.id_vag " +
+            //"left join OWNERS o on v.id_owner=o.id_owner " +
             //"left join OWNERS_COUNTRIES c on o.id_country=c.id_own_country " +
             //"left join VAG_CONDITIONS vc on vo.id_cond=vc.id_cond " +
             //"left join GRUZS g on vo.id_gruz=g.id_gruz " +
@@ -90,7 +97,7 @@ namespace RailwayCL
             //"left join GDSTAIT gd on vo.id_gdstait = gd.id_gdstait " +
             //"left join NAZN_COUNTRIES nc on vo.id_nazn_country = nc.id_country " +
             //"left join VAG_CONDITIONS2 vc2 on vo.id_cond2=vc2.id_cond " +
-            //"left join v_p_vozvrat_ip p on p.id = (select top 1 id from v_P_VOZVRAT_IP where n_vag=v.num order by DATE_MAIL desc) "+
+            //"left join v_p_vozvrat_ip p on p.id = (select top 1 id from v_P_VOZVRAT_IP where n_vag=v.num order by DATE_MAIL desc) " +
             //"where vo.st_lock_id_stat=@id_stat and vo.is_present=0 and vo.is_hist=0 " + strWhere +
             //" and vo.st_lock_train = @trainNum " +
             //"order by CAST(FORMAT(vo.dt_from_way,'yyyy-MM-dd HH:mm:ss') AS datetime), vo.st_lock_order " + str);

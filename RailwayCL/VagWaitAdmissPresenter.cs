@@ -5,9 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using Excel = Microsoft.Office.Interop.Excel;
-using log4net;
-using log4net.Config;
+//using log4net;
+//using log4net.Config;
 using EFRailCars.Helpers;
+using ServicesStatus;
+using RWOperations.Helpers;
+using EFRailCars.Railcars;
+using EFRailCars.Entities;
 
 namespace RailwayCL
 {
@@ -23,7 +27,10 @@ namespace RailwayCL
         VagSendOthStDB vagSendOthStDB = new VagSendOthStDB();
         VagWaitAdmissDB vagWaitAdmissDB = new VagWaitAdmissDB();
 
-        private static readonly ILog log = LogManager.GetLogger(typeof(VagManeuverPresenter));
+        private RWO_Desktop rwoperation = new RWO_Desktop();
+        private RC_VagonsOperations rc_vo = new RC_VagonsOperations();
+
+        //private static readonly ILog log = LogManager.GetLogger(typeof(VagManeuverPresenter));
 
         public VagWaitAdmissPresenter(IMainView main, IVagWaitAdmissView view)
         {
@@ -202,15 +209,14 @@ namespace RailwayCL
             try
             {
                 if (view.listWaitAdmiss.Count == 0) return;
-
                 bool isStat = view.hasSelFromStatVag;
                 bool isGF = view.hasSelFromGfVag;
                 bool isShop = view.hasSelFromShopVag;
-
                 if (view.getDialogTrainResult(main.selectedStation, view.getSelTrain(isGF, isShop).SendingPoint, isStat||main.selectedStation.ID==17))
                 {
-                    //try
-                    //{
+                    string mess_accept = String.Format("Пользователь принял состав целиком на станцию  {0}, путь {1}", main.selectedStation.Name, view.wayPerformAdmissTrain.NumName);
+                    string status = "";
+
                     List<VagWaitAdmiss> list = view.listWaitAdmiss;
 
                     bool leftVagOnGf = false;
@@ -223,7 +229,11 @@ namespace RailwayCL
                             leftVagOnGf = true;
                         }
                     }
-
+                    //TODO: RW-ОПЕРАЦИИ Включил логирование rw-операций принятия на станцию
+                    VAGON_OPERATIONS vag = rc_vo.GetVagonsOperations(list[0].id_oper);
+                    rwoperation.ReceptionCars(
+                        list.Select(s => (int)s.num_vag).ToArray(), (int)vag.id_stat, vag.st_gruz_front > 0 ? vag.st_gruz_front : null, vag.st_shop > 0 ? vag.st_shop : null, main.selectedStation.ID, view.wayPerformAdmissTrain.ID, new int[] { view.getSelTrain(isGF, isShop).St_lock_locom1, view.getSelTrain(isGF, isShop).St_lock_locom2 }
+                        );
                     foreach (VagWaitAdmiss item in list)
                     {
                         if (!isStat)
@@ -234,19 +244,19 @@ namespace RailwayCL
                         // Установили путь
                         mainPresenter.changeConditionWayOn(item, view.wayPerformAdmissTrain);
                         // Определение четной нечетной стороны sidePerformAdmissTrain (диалоговое окно)
-                        log.Info("sidePerformAdmissTrain: " + view.sidePerformAdmissTrain.ToString());
+                        //log.Info("sidePerformAdmissTrain: " + view.sidePerformAdmissTrain.ToString());
                         //if (main.numSide == view.sidePerformAdmissTrain || !isStat)
                         if (main.numSide == view.sidePerformAdmissTrain || view.sidePerformAdmissTrain == Side.Empty)
                         {
                             if (main.selectedStation.ID == 17 && isShop)
                                 item.num_vag_on_way = list.IndexOf(item) + 1;
                             else item.num_vag_on_way = list.Count - list.IndexOf(item);
-                            log.Info("item.num_vag_on_way:" + item.num_vag_on_way.ToString());
+                            //log.Info("item.num_vag_on_way:" + item.num_vag_on_way.ToString());
                         }
                         else
                         {
                             item.num_vag_on_way = view.wayPerformAdmissTrain.Vag_amount + list.IndexOf(item) + 1;
-                            log.Info("item.num_vag_on_way:" + item.num_vag_on_way.ToString());
+                            //log.Info("item.num_vag_on_way:" + item.num_vag_on_way.ToString());
                         }
 
                         int ins_result = vagWaitAdmissDB.execAdmissOthStat(item, main.selectedStation,
@@ -255,9 +265,10 @@ namespace RailwayCL
                         if (ins_result != -1)
                         {
                             item.id_oper = ins_result;
-                            log.Info("ins_result: " + ins_result);
+                            //log.Info("ins_result: " + ins_result);
                         }
                         else return;
+                        status += String.Format("[состав:{0}, №:{1}, дата АМКР:{2}]; ", item.id_sostav, item.num_vag, item.dt_amkr);
                     }
 
                     //if (main.numSide == view.sidePerformAdmissTrain || !isStat)
@@ -266,7 +277,7 @@ namespace RailwayCL
                     //new VagOperationsDB().changeVagNumsWayOn(list.Count, ((VagWaitAdmiss)bs1P2.List[bs1P2.IndexOf(list[0])]).id_oper, vagAcceptForm.getWay());
                     {
                         vagOperationsDB.changeVagNumsWayOn(list.Count, list[0].id_oper, view.wayPerformAdmissTrain);
-                        log.Info("list[0].id_oper" + list[0].id_oper);
+                        //log.Info("list[0].id_oper" + list[0].id_oper);
                     }
 
                     if (!isGF || !leftVagOnGf)
@@ -280,11 +291,7 @@ namespace RailwayCL
                     }
                     loadVagWaitAdmiss(isGF, isShop);
                     main.showInfoMessage("Вагоны успешно зачислены на путь!");
-                    //}
-                    //catch (Exception ex)
-                    //{
-                    //    main.showErrorMessage(ex.Message);
-                    //}
+                    mess_accept.SaveLogEvents(status, service.DesktopRailCars);
                 }
             }
             catch (Exception ex)
@@ -305,9 +312,16 @@ namespace RailwayCL
 
                 if (view.getDialogTrainResult(main.selectedStation, view.getSelTrain(isGF, isShop).SendingPoint, isStat||main.selectedStation.ID == 17))
                 {
+                    string mess_accept = String.Format("Пользователь принял партию вагонов состава на станцию  {0}, путь {1}", main.selectedStation.Name, view.wayPerformAdmissTrain.NumName);
+                    string status = "";
                     //try
                     //{
                     List<VagWaitAdmiss> list = view.listToAdmiss();
+                    //TODO: RW-ОПЕРАЦИИ Включил логирование rw-операций принятия на станцию
+                    VAGON_OPERATIONS vag = rc_vo.GetVagonsOperations(list[0].id_oper);
+                    rwoperation.ReceptionCars(
+                        list.Select(s => (int)s.num_vag).ToArray(), (int)vag.id_stat, vag.st_gruz_front > 0 ? vag.st_gruz_front : null, vag.st_shop > 0 ? vag.st_shop : null, main.selectedStation.ID, view.wayPerformAdmissTrain.ID, new int[] { view.getSelTrain(isGF, isShop).St_lock_locom1, view.getSelTrain(isGF, isShop).St_lock_locom2 }
+                        );
                     foreach (VagWaitAdmiss item in list)
                     {
                         if (!isStat)
@@ -319,19 +333,19 @@ namespace RailwayCL
 
                         mainPresenter.changeConditionWayOn(item, view.wayPerformAdmissTrain);
                         // -----------------------------
-                        log.Info("sidePerformAdmissTrain: " + view.sidePerformAdmissTrain.ToString());
+                        //log.Info("sidePerformAdmissTrain: " + view.sidePerformAdmissTrain.ToString());
                         //if (main.numSide == view.sidePerformAdmissTrain)
                         if (main.numSide == view.sidePerformAdmissTrain || view.sidePerformAdmissTrain == Side.Empty)
                         {
                             if (main.selectedStation.ID == 17 && isShop)
                                 item.num_vag_on_way = list.IndexOf(item) + 1;
                             else item.num_vag_on_way = list.Count - list.IndexOf(item);
-                            log.Info("item.num_vag_on_way:" + item.num_vag_on_way.ToString());
+                            //log.Info("item.num_vag_on_way:" + item.num_vag_on_way.ToString());
                         }
                         else
                         {
                             item.num_vag_on_way = view.wayPerformAdmissTrain.Vag_amount + list.IndexOf(item) + 1;
-                            log.Info("item.num_vag_on_way:" + item.num_vag_on_way.ToString());
+                            //log.Info("item.num_vag_on_way:" + item.num_vag_on_way.ToString());
                         }
 
                         int ins_result = vagWaitAdmissDB.execAdmissOthStat(item, main.selectedStation,
@@ -339,9 +353,10 @@ namespace RailwayCL
                         if (ins_result != -1)
                         {
                             item.id_oper = ins_result;
-                            log.Info("ins_result: " + ins_result);
+                            //log.Info("ins_result: " + ins_result);
                         }
                         else return;
+                        status += String.Format("[состав:{0}, №:{1}, дата АМКР:{2}]; ", item.id_sostav, item.num_vag, item.dt_amkr);
                     }
 
                     //if (main.numSide == view.sidePerformAdmissTrain || !isStat)
@@ -349,7 +364,7 @@ namespace RailwayCL
                     // изменить нумерацию вагонов на пути назначения
                     {
                         vagOperationsDB.changeVagNumsWayOn(list.Count, list[0].id_oper, view.wayPerformAdmissTrain);
-                        log.Info("list[0].id_oper" + list[0].id_oper);
+                        //log.Info("list[0].id_oper" + list[0].id_oper);
                     }
 
                     //убрать вагоны выделенные желтым
@@ -380,6 +395,7 @@ namespace RailwayCL
                     //{
                     //    main.showErrorMessage(ex.Message);
                     //}
+                    mess_accept.SaveLogEvents(status, service.DesktopRailCars);
                 }
             }
             catch (Exception ex)
@@ -394,16 +410,33 @@ namespace RailwayCL
         {
             view.rospCheckChanged();
         }
-
+        /// <summary>
+        /// Выполнить роспуск
+        /// </summary>
         public void performRospusk()
         {
             if (!view.hasSelFromStatVag) return;
             try
             {
+                string mess_accept = String.Format("Пользователь выполнил роспуск состава на станции  {0}", main.selectedStation.Name);
+                string status = "";
                 Side arriveSide = neighbourStationsDB.getArrivSide(main.selectedStation, (Station)view.getSelTrain(false, false).SendingPoint);
 
                 List<VagWaitAdmiss> list = (from v in view.listWaitAdmiss where v.WayFact.ID != -1 select v).ToList();
 
+                //TODO: RW-ОПЕРАЦИИ Включил логирование rw-операций принятия на станцию
+
+                List<IGrouping<int, VagWaitAdmiss>> group_list = new List<IGrouping<int, VagWaitAdmiss>>();
+                group_list = list.GroupBy(o => o.WayFact.ID).ToList();
+                foreach (IGrouping<int, VagWaitAdmiss> group_wag in group_list)
+                {
+                    List<VagWaitAdmiss> list_wag = new List<VagWaitAdmiss>();
+                    list_wag = group_wag.ToList();
+                    VAGON_OPERATIONS vag = rc_vo.GetVagonsOperations(list_wag[0].id_oper);
+                    rwoperation.ReceptionCars(
+                        list.Select(s => (int)s.num_vag).ToArray(), (int)vag.id_stat, null, null, main.selectedStation.ID, group_wag.Key, new int[] { view.getSelTrain(false, false).St_lock_locom1, view.getSelTrain(false, false).St_lock_locom2 }
+                        );
+                }
                 foreach (VagWaitAdmiss item in list)
                 {
                     List<VagWaitAdmiss> listOnSameWay = (from v in list where v.WayFact.ID == item.WayFact.ID select v).ToList();
@@ -422,6 +455,7 @@ namespace RailwayCL
                         item.WayFact, DateTime.Now, view.getSelTrain(false, false).St_lock_locom1, view.getSelTrain(false, false).St_lock_locom2);
                     if (ins_result != -1) view.listWaitAdmiss[view.listWaitAdmiss.IndexOf(item)].id_oper = ins_result;
                     else return;
+                    status += String.Format("[состав:{0}, №:{1}, дата АМКР:{2}, путь:{3}]; ", item.id_sostav, item.num_vag, item.dt_amkr, item.WayFact.NumName);
                 }
 
                 if (main.numSide == arriveSide)
@@ -457,6 +491,8 @@ namespace RailwayCL
                     view.refreshTrains(false, false);
                 }
                 main.showInfoMessage("Роспуск успешно выполнен!");
+                mess_accept.SaveLogEvents(status, service.DesktopRailCars);
+
             }
             catch (Exception ex)
             {
@@ -466,16 +502,16 @@ namespace RailwayCL
         /// <summary>
         /// Пересылка на другую станцию функция "транзит"
         /// </summary>
-        public void performAccSend() // пересылание на др. станцию
+        public void performAccSend()
         {
             if (!view.hasSelFromStatVag) return;
-
             try
             {
                 if (view.getDialogTransitResult(main.selectedStation))
                 {
                     List<VagWaitAdmiss> list = view.listWaitAdmiss;
-
+                    string mess_transit = String.Format("Пользователь выполнил транзит состава на станцию {0} через станцию  {1}, путь {2}", view.statPerformTransit.Name, main.selectedStation.Name, view.wayPerformTransit.NumName);
+                    string status = "";
                     foreach (VagWaitAdmiss item in list)
                     {
                         item.num_vag_on_way = list.IndexOf(item) + 1;
@@ -496,11 +532,13 @@ namespace RailwayCL
 
                         //отправление со станции транзита
                         vagSendOthStDB.send(item.id_oper, item.cond.Id, view.dtArriveTransit, view.dtArriveTransit);
+                        status += String.Format("[состав:{0}, №:{1}, дата АМКР:{2}]; ", item.id_sostav, item.num_vag, item.dt_amkr);
                     }
 
                     //удаляем строку поезда
                     view.removeTrain(false, false, view.getSelTrain(false, false));
                     loadVagWaitAdmiss(false, false);
+                    mess_transit.SaveLogEvents(status, service.DesktopRailCars);
                 }
             }
             catch (Exception ex)
@@ -703,14 +741,20 @@ namespace RailwayCL
             ExcelApp.Visible = true;
             GC.Collect();
         }
-
+        /// <summary>
+        /// Убрать вагон из прибытия
+        /// </summary>
         public void trainDelete() 
         {
+            string status = "";
             List<VagWaitAdmiss> list = view.listWaitAdmiss;
             foreach (VagWaitAdmiss item in list)
             {
                 vagWaitAdmissDB.deleteVagOperations(item.id_oper);
+                status += String.Format("[состав:{0}, №:{1}, дата АМКР:{2}]; ", item.id_sostav, item.num_vag, item.dt_amkr);
             }
+            string mess_del = String.Format("Пользователь удалил состав из закладки прибытие на станции: {0}", main.selectedStation.Name);
+            mess_del.SaveLogEvents(status, service.DesktopRailCars);
         }
         /// <summary>
         /// Убрать цвет выделенного вагона

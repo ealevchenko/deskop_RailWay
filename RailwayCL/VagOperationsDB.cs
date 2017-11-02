@@ -109,6 +109,10 @@ namespace RailwayCL
             List<VagOperations> list = new List<VagOperations>();
             foreach (DataRow row in table.Rows)
             {
+                double? wr = null;
+                if (row["WeightReweighing"] != DBNull.Value) {
+                    wr = Double.Parse(row["WeightReweighing"].ToString());
+                }
                 VagOperations vagOperations = new VagOperations()
                 {
                     // Общая информация
@@ -122,6 +126,8 @@ namespace RailwayCL
                     id_sostav = row["IDSostav"] != DBNull.Value ? int.Parse(row["IDSostav"].ToString()): -1,
                     id_vag = row["id_vagon"] != DBNull.Value ? int.Parse(row["id_vagon"].ToString()): -1,
                     num_vag = row["num_vagon"] != DBNull.Value ? int.Parse(row["num_vagon"].ToString()) : -1,
+                    //id_stat = row["id_stat"] != DBNull.Value ? int.Parse(row["id_stat"].ToString()) : -1,
+
                     dt_on_stat = row["dt_on_stat"] != DBNull.Value ? row["dt_on_stat"] as DateTime? : null,
                     dt_from_stat = row["dt_from_stat"] != DBNull.Value ? row["dt_from_stat"] as DateTime? : null,
                     dt_on_way = row["dt_on_way"] != DBNull.Value ? row["dt_on_way"] as DateTime? : null,
@@ -154,12 +160,12 @@ namespace RailwayCL
                     ceh_gruz = row["shop"] != DBNull.Value ? row["shop"] as string : "",
                     outer_station = row["st_otpr"] != DBNull.Value ? row["st_otpr"] as string : "",
 
-                    NumNakl = row["NumNakl"] != DBNull.Value ? row["NumNakl"] as int? : null, // Номер накладной
+                    NumNakl = row["NumNakl"] != DBNull.Value ? row["NumNakl"].ToString().Trim() : "", // Номер накладной
                     CargoName = row["CargoName"] != DBNull.Value ? row["CargoName"].ToString().Trim() : "",
                     WeightDoc = row["WeightDoc"] != DBNull.Value ? Double.Parse(row["WeightDoc"].ToString()) : 0,
                     DocNumReweighing = row["DocNumReweighing"] != DBNull.Value ? row["DocNumReweighing"] as int? : null, // Номер отвесной
                     DocDataReweighing = row["DocDataReweighing"] != DBNull.Value ? row["DocDataReweighing"] as DateTime? : null,
-                    WeightReweighing = row["WeightReweighing"] != DBNull.Value ? row["WeightReweighing"] as double? : null,
+                    WeightReweighing = wr,
                     DateTimeReweighing = row["DateTimeReweighing"] != DBNull.Value ? row["DateTimeReweighing"] as DateTime? : null,
                     CodeMaterial = row["CodeMaterial"] != DBNull.Value ? row["CodeMaterial"].ToString().Trim() : "", 
                     NameMaterial = row["NameMaterial"] != DBNull.Value ? row["NameMaterial"].ToString().Trim() : "",

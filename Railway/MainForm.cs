@@ -13,11 +13,13 @@ using System.Deployment.Application;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.Reflection;
 //using Railway.Properties;
-using log4net;
-using log4net.Config;
+//using log4net;
+//using log4net.Config;
 using RailwayCL;
 using EFRailCars.Helpers;
 using System.Threading;
+using ServicesStatus;
+using ServicesStatus.Concrete;
 
 namespace RailwayUI
 {
@@ -47,7 +49,7 @@ namespace RailwayUI
         bool selectAllBtnClicked = false;
         bool findVagByNumPerforming = false; 
 
-        private static readonly ILog log = LogManager.GetLogger(typeof(MainForm));
+        //private static readonly ILog log = LogManager.GetLogger(typeof(MainForm));
         // IMainView
 
         int IMainView.wayIdxToSelect
@@ -1947,7 +1949,7 @@ namespace RailwayUI
             try
             {
                 InitializeComponent();
-                log4net.Config.XmlConfigurator.Configure();
+                //log4net.Config.XmlConfigurator.Configure();
 
                 mainPresenter = new MainPresenter(this);
                 vagOnStatPresenter = new VagOnStatPresenter(this, this);
@@ -1955,16 +1957,17 @@ namespace RailwayUI
                 vagSendOtherStPresenter = new VagSendOthStPresenter(this, this);
                 vagWaitAdmissPresenter = new VagWaitAdmissPresenter(this, this);
                 vagWaitRemoveAdmissPresenter = new VagWaitRemoveAdmissPresenter(this, this);
-                log.Info("Application started. Version:" + ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString(4));
                 if (ApplicationDeployment.IsNetworkDeployed)
                 {
                     this.Text = "Система мониторинга вагонов АМКР. Версия " + ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString(4);
+                    string mess_user_start = String.Format("Пользователь запустил приложение Railcars ver:{0}", ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString(4));
+                    mess_user_start.SaveLogEvents(EventStatus.Ok, service.DesktopRailCars);
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-                log.Error("Error in MainForm constructor: "+ex.Message);
+                //log.Error("Error in MainForm constructor: "+ex.Message);
             }
         }
 

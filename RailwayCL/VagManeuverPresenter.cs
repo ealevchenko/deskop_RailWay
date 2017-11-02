@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
-using log4net;
-using log4net.Config;
+//using log4net;
+//using log4net.Config;
 using EFRailCars.Helpers;
+using ServicesStatus;
+using ServicesStatus.Concrete;
+using RWOperations.Helpers;
 
 namespace RailwayCL
 {
@@ -20,9 +23,11 @@ namespace RailwayCL
         WayDB wayDB = new WayDB();
         VagManeuverDB vagManeuverDB = new VagManeuverDB();
 
-        protected Maneuvers maneuvers = new Maneuvers();
 
-        private static readonly ILog log = LogManager.GetLogger(typeof(VagManeuverPresenter));
+        protected Maneuvers maneuvers = new Maneuvers();
+        private RWO_Desktop rwoperation = new RWO_Desktop();
+
+        //private static readonly ILog log = LogManager.GetLogger(typeof(VagManeuverPresenter));
 
         public VagManeuverPresenter(IMainView main, IVagManeuverView view)
         {
@@ -284,14 +289,14 @@ namespace RailwayCL
                 if (view.selectedSide == Side.Empty)
                 {
                     main.showErrorMessage(SideUtils.GetInstance().CbNonSelected + "!");
-                    log.Error(SideUtils.GetInstance().CbNonSelected + "!");
+                    //log.Error(SideUtils.GetInstance().CbNonSelected + "!");
                     return;
                 }
                 // проверка на выбор пути
                 if (view.selectedWayTo == null)
                 {
                     main.showErrorMessage("Выберите путь для постановки вагонов!");
-                    log.Error("Выберите путь для постановки вагонов!");
+                   //log.Error("Выберите путь для постановки вагонов!");
                     return;
                 }
                 // проверка на превышение вместимости пути
@@ -300,7 +305,7 @@ namespace RailwayCL
                 {
                     if (!main.showQuestMessage("Количество вагонов превышает вместимость пути! Продолжить?"))
                     {
-                        log.Info("Количество вагонов превышает вместимость пути");
+                        //log.Info("Количество вагонов превышает вместимость пути");
                         return;
                     }
                 }
@@ -308,50 +313,13 @@ namespace RailwayCL
 
                 int locomNum = 0;
                 if (view.selectedLocom != null) locomNum = view.selectedLocom.Num;
-                //TODO: Переделать маневры
                 view.visiblePerform = false;
+                string mess_manevr = String.Format("Пользователь выполнил маневры на пути: {0}, станции: {1}",view.selectedWayFrom.NumName, main.selectedStation.Name);
+                rwoperation.ManeuverCars(view.selectedWayFrom.ID, main.numSide,view.selectedLocom == null ? -1 : view.selectedLocom.Num); //TODO: Включил буфер операций по маневрам
                 int res = maneuvers.ManeuverCars(view.selectedWayFrom.ID, main.numSide);
+                mess_manevr.SaveLogEvents(res>=0 ? String.Format("Переставлено {0} вагонов", res): "Error" , service.DesktopRailCars);
+
                 view.visiblePerform = true;
-
-                //TODO: Удалил переделал маневры 
-                //log.Info("Начало маневра с пути  " + view.selectedWayFrom.NumName + ", кол-во вагонов: " + view.selectedWayFrom.Vag_amount.ToString() +
-                //    " на путь " + view.selectedWayTo.NumName + ", кол-во вагонов: " + view.selectedWayTo.Vag_amount + ". Вагонов на маневре: " + view.listVagOnMan.Count +
-                //    ". Горловина маневра: " + view.selectedSide.ToString() + ". Локомотив: " + locomNum);
-                //foreach (VagManeuver item in view.listVagForMan)
-                //{
-                //    log.Info("Вагон " + item.num_vag + " до маневра имеет № на пути: " + item.num_vag_on_way);
-                //}
-                ////BeginTransaction
-                //foreach (VagManeuver item in view.listVagOnMan)
-                //{
-                //    log.Info("Вагон на маневре №" + item.num_vag + " до маневра имеет № на пути: " + item.num_vag_on_way);
-                //    mainPresenter.changeConditionWayOn(item, view.selectedWayTo);
-                //    mainPresenter.changeConditionWayAfter(item, view.selectedWayFrom);
-
-                //    if (main.numSide == view.selectedSide)
-                //        item.num_vag_on_way = view.listVagOnMan.IndexOf(item) + 1;
-                //    else item.num_vag_on_way = view.selectedWayTo.Vag_amount + view.listVagOnMan.Count - view.listVagOnMan.IndexOf(item);
-                //    int ins_result = vagManeuverDB.execManeuver(item, view.selectedWayTo);
-                //    if (ins_result != -1)
-                //    {
-                //        item.id_oper = ins_result;
-                //        log.Info("По вагону " + item.num_vag + " маневр выполнен.");
-                //    }
-                //}
-                ////Log(DateTime.Now.ToString() + " Maneuver added to DB" + "\r\n");
-
-                //if (main.numSide == view.selectedSide)
-                //{
-                //    // изменить нумерацию вагонов на пути назначения
-                //    vagManeuverDB.changeVagNumsWayOn(view.listVagOnMan.Count, view.listVagOnMan[0].id_oper, view.selectedWayTo);
-                //    log.Info("Изменение нумерации вагонов на пути назначения. First vagon id_oper=" + view.listVagOnMan[0].id_oper);
-                //}
-
-                //ManChangeVagNumsWayFrom(); // изменить нумерацию вагонов на пути изъятия - убрал коверкало номера если копировали на тотже путь
-
-                //changeVagAmountOnWaysAfterManeuver(); //  изменить кол-во вагонов на путях после маневра
-
-                //CommitTransaction / Rollback
 
                 view.clearVagOnMan();
                 view.clearWaysOnSelection();

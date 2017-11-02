@@ -16,6 +16,7 @@ namespace RailwayCL
         public int id_sostav { get; set; }// = -1; //
         public int id_vag { get; set; }// = -1;    //TODO: Убрать переход на новый справочник Wagons
         public int num_vag { get; set; }// = -1;
+        //public int id_stat { get; set; }// = -1;
 
         public DateTime? dt_on_stat { get; set; }//;
         public DateTime? dt_from_stat { get; set; }//;
@@ -46,7 +47,7 @@ namespace RailwayCL
 
         public string wagon_country { get; set; }
 
-        public int? NumNakl { get; set; } // Номер накладной
+        public string NumNakl { get; set; } // Номер накладной
         public string CargoName { get; set; } // Название груза по данным  МТ
         public double WeightDoc { get; set; } // Вес грузза по данным  МТ перезапишет САП по документам
         public int? DocNumReweighing { get; set; } // Номер отвесной по данным САП
@@ -94,6 +95,7 @@ namespace RailwayCL
             this.id_sostav = vo.id_sostav;//
             this.id_vag = vo.id_vag;//TODO: Убрать переход на новый справочник Wagons
             this.num_vag = vo.num_vag;//
+            //this.id_stat = vo.id_stat;//
 
             this.dt_on_stat = vo.dt_on_stat;//
             this.dt_from_stat = vo.dt_from_stat;//

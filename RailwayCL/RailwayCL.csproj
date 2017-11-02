@@ -130,6 +130,24 @@
       <Project>{50de3d96-54b1-4b7d-a24f-6bcb42a3a1d8}</Project>
       <Name>EFRailCars</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Project RailWay\EFRWOperations\EFRWOperations.csproj">
+      <Project>{f7553724-e10c-4e04-94e3-511e8ce0a4f5}</Project>
+      <Name>EFRWOperations</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Project RailWay\RWOperations_Desktop\RWOperations_Desktop.csproj">
+      <Project>{7882ada6-ae6d-48c2-8c8a-db7aa0e76352}</Project>
+      <Name>RWOperations_Desktop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Project RailWay\ServicesStatus\ServicesStatus.csproj">
+      <Project>{b351fc89-89fc-4f4c-8502-e745cfa7faba}</Project>
+      <Name>ServicesStatus</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
