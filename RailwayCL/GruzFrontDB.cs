@@ -31,6 +31,11 @@ namespace RailwayCL
         //    return gruzFrontDB;
         //}
 
+        /// <summary>
+        /// Получить список вагоно-опрокидывателей с вагонами на них
+        /// </summary>
+        /// <param name="stat"></param>
+        /// <returns></returns>
         public List<GruzFront> getGruzFronts(Station stat)
         {
             List<GruzFront> list = new List<GruzFront>();

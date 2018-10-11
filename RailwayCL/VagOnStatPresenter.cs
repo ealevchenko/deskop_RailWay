@@ -61,7 +61,7 @@ namespace RailwayCL
             }
             catch (ArgumentOutOfRangeException) { }
         }
-
+        // Выбран вагоноопрокид
         public void onGfSelect()
         {
             try
@@ -75,7 +75,7 @@ namespace RailwayCL
                 main.showErrorMessage(ex.Message);
             }
         }
-
+        // Выбран цех
         public void onShopSelect()
         {
             try

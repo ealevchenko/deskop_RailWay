@@ -31,6 +31,11 @@ namespace RailwayCL
         //    return shopDB;
         //}
 
+        /// <summary>
+        /// Получить список цехов пренадлежащих станции и вагонам на наих
+        /// </summary>
+        /// <param name="stat"></param>
+        /// <returns></returns>
         public List<Shop> getShops(Station stat)
         {
             List<Shop> list = new List<Shop>();

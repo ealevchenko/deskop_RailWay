@@ -30,6 +30,7 @@ namespace RailwayCL
         //    return vagWaitRemoveAdmissDB;
         //}
 
+        // Получить ожидающих снятия с зачисления
         private DataTable getTrainsTable(Station stat)
         {
             string query = "[RailCars].[GetRemoveTrains]";
